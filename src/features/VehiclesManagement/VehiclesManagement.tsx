@@ -17,6 +17,7 @@ export default function VehiclesManagement() {
     {
       make: "Fiat",
       model: "Uno",
+      year: "2011",
       purchasePrice: "R$ 20.000,00",
       purchaseDate: "01/01/2020",
       actions: <Button>Editar</Button>,
@@ -24,6 +25,7 @@ export default function VehiclesManagement() {
     {
       make: "Fiat",
       model: "Uno",
+      year: "2011",
       purchasePrice: "R$ 20.000,00",
       purchaseDate: "01/01/2020",
       actions: <Button>Editar</Button>,
@@ -31,6 +33,7 @@ export default function VehiclesManagement() {
     {
       make: "Fiat",
       model: "Uno",
+      year: "2011",
       purchasePrice: "R$ 20.000,00",
       purchaseDate: "01/01/2020",
       actions: <Button>Editar</Button>,
@@ -38,6 +41,7 @@ export default function VehiclesManagement() {
     {
       make: "Fiat",
       model: "Uno",
+      year: "2011",
       purchasePrice: "R$ 20.000,00",
       purchaseDate: "01/01/2020",
       actions: <Button>Editar</Button>,
@@ -50,10 +54,10 @@ export default function VehiclesManagement() {
         columns={columns}
         data={data}
         mobile={{
-          mainColumn: "make",
-          secondaryColumn: "model",
+          mainColumn: (row: any) => `${row.make} ${row.model}`,
+          secondaryColumn: "year",
           defaultRotationColumn: "purchasePrice",
-          hiddenColumns: ["actions"],
+          hiddenColumns: ["make", "model", "actions"],
         }}
       />
     </div>

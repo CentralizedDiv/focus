@@ -1,13 +1,24 @@
 @import "../../utils/variables";
 
 .Select {
-  margin-top: 4px;
-  padding: 8px;
-  border-color: #d8d8d8;
-  background-color: #fff;
-  border-radius: 4px;
-  outline: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -o-appearance: none;
+  position: relative;
+
+  select {
+    margin-top: 4px;
+    padding: 8px;
+    width: 100%;
+    border-color: #d8d8d8;
+    background-color: #fff;
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+  }
+
+  &-icon {
+    position: absolute;
+    right: 10px;
+    top: 14px;
+  }
 }

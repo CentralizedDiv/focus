@@ -58,13 +58,11 @@
       border-bottom: 1px solid #d8d8d8;
       position: relative;
 
-      &::after {
-        content: ">";
+      &CTA {
         position: absolute;
-        right: 6px;
-        top: calc(50% - 10px);
-        font-weight: bold;
-        font-size: 20px;
+        right: 4px;
+        top: calc(50% - 5px);
+        font-size: 14px;
       }
 
       &:first-child {
@@ -78,19 +76,21 @@
       p {
         margin: 0;
 
-        &:first-child {
+        &:first-of-type {
           grid-column-start: 1;
-          color: $color-text;
+          font-size: 14px;
         }
 
-        &:last-child {
+        &:last-of-type {
           display: flex;
           align-items: center;
-          justify-content: center;
-          background: $color-primary;
+          max-width: min-content;
+          white-space: nowrap;
+          margin-left: auto;
+          background: #0b3850;
           color: #fff;
           border-radius: 4px;
-          padding-top: 4px;
+          padding: 0 8px;
           grid-column: 2/3;
           grid-row: 1/3;
         }

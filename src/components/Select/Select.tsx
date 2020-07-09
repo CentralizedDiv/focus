@@ -1,12 +1,14 @@
 import './Select.scss';
 
 import React, { OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
 
 export default function Select(props: SelectProps) {
   return (
-    <select {...props} className="Select">
-      {props.children}
-    </select>
+    <div className="Select">
+      <select {...props}>{props.children}</select>
+      <FaChevronDown className="Select-icon" />
+    </div>
   );
 }
 

@@ -1,6 +1,7 @@
 import './Table.scss';
 
 import React, { useState } from 'react';
+import { FaChevronRight } from 'react-icons/fa';
 
 import useMediaQuery from '../../utils/hooks/useMediaQuery';
 import Select, { Option } from '../Select/Select';
@@ -39,9 +40,14 @@ export default function Table(props: TableProps) {
           <div className="Table-mobileBody">
             {props.data.map((row, index) => (
               <div key={index} className="Table-mobileRow">
-                <h3>{row[props.mobile.mainColumn]}</h3>
+                <h3>
+                  {typeof props.mobile.mainColumn === "function"
+                    ? props.mobile.mainColumn(row)
+                    : [props.mobile.mainColumn]}
+                </h3>
                 <p>{row[props.mobile.secondaryColumn]}</p>
                 <p>{row[rotationColumn]}</p>
+                <FaChevronRight className="Table-mobileRowCTA" />
               </div>
             ))}
           </div>
@@ -79,7 +85,7 @@ export interface TableColumn {
 }
 
 export interface TableMobileOptions {
-  mainColumn: string;
+  mainColumn: string | React.ReactNode;
   secondaryColumn: string;
   defaultRotationColumn: string;
   hiddenColumns: string[];
