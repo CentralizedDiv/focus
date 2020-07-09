@@ -56,10 +56,9 @@ $duration: 0.3s;
     width: 100%;
     display: flex;
     align-items: center;
-    padding: $s;
+    padding: $l $m;
     background-color: $color-text;
     color: $color-white;
-    font-size: 14px;
 
     svg {
       @media only screen and (min-width: 768px) {
