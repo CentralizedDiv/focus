@@ -1,23 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap");
-@import "./utils/variables";
+@import "./utils/styles/variables";
 
 html {
-  background-color: #f5f8fc;
+  background-color: $color-body-background;
 }
 
 html,
 button,
 select {
-  font-family: "Montserrat", sans-serif;
+  font-family: $font-family;
   color: $color-text;
 }
 
 body {
-  max-width: calc(1366px - 16px);
-  margin: 8px;
+  max-width: calc(1366px - 8px);
+  margin: $s;
 
   @media only screen and (min-width: 1366px) {
-    margin: 8px auto;
+    margin: $s auto;
   }
 }
 
@@ -26,5 +26,5 @@ h2,
 h3,
 h4 {
   color: $color-primary;
-  font-weight: 500;
+  font-weight: $font-weight-bold;
 }

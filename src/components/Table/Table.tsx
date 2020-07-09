@@ -16,7 +16,7 @@ export default function Table(props: TableProps) {
         <>
           <div className="Table-mobileDropdown">
             <label htmlFor="rotation">
-              Comparar
+              {props.mobile.rotationLabel}
               <Select
                 id="rotation"
                 defaultValue={props.mobile.defaultRotationColumn}
@@ -39,13 +39,17 @@ export default function Table(props: TableProps) {
           </div>
           <div className="Table-mobileBody">
             {props.data.map((row, index) => (
-              <div key={index} className="Table-mobileRow">
+              <div key={index} className="Table-mobileRow" onClick={props.mobile.onClickRow || props.onClickRow}>
                 <h3>
                   {typeof props.mobile.mainColumn === "function"
                     ? props.mobile.mainColumn(row)
-                    : [props.mobile.mainColumn]}
+                    : row[props.mobile.mainColumn]}
                 </h3>
-                <p>{row[props.mobile.secondaryColumn]}</p>
+                <p>
+                  {typeof props.mobile.secondaryColumn === "function"
+                    ? props.mobile.secondaryColumn(row)
+                    : row[props.mobile.secondaryColumn]}
+                </p>
                 <p>{row[rotationColumn]}</p>
                 <FaChevronRight className="Table-mobileRowCTA" />
               </div>
@@ -64,10 +68,10 @@ export default function Table(props: TableProps) {
           </div>
           <div className="Table-body">
             {props.data.map((row, index) => (
-              <div key={index} className="Table-row">
-                {props.columns.map(({ id }) => (
+              <div key={index} className="Table-row" onClick={props.onClickRow}>
+                {props.columns.map(({ id, render }) => (
                   <div key={id} className="Table-cell">
-                    {row[id]}
+                    {typeof render === "function" ? render(row) : row[id]}
                   </div>
                 ))}
               </div>
@@ -82,17 +86,21 @@ export default function Table(props: TableProps) {
 export interface TableColumn {
   id: string;
   label: string;
+  render?: (row: any) => JSX.Element;
 }
 
 export interface TableMobileOptions {
-  mainColumn: string | React.ReactNode;
-  secondaryColumn: string;
+  rotationLabel: string;
+  mainColumn: ((row: any) => JSX.Element) | string;
+  secondaryColumn: ((row: any) => JSX.Element) | string;
   defaultRotationColumn: string;
   hiddenColumns: string[];
+  onClickRow?: (...args: any) => void;
 }
 
 export interface TableProps {
   columns: TableColumn[];
   data: any[];
   mobile: TableMobileOptions;
+  onClickRow?: (...args: any) => void;
 }

@@ -1,0 +1,81 @@
+@import "../../utils/styles/variables";
+
+$ease-in-out-circ: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+$duration: 0.3s;
+
+.Drawer {
+  position: fixed;
+  z-index: 9999;
+  width: 0%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  transition: width 0s ease $duration;
+
+  > * {
+    transition: transform $duration $ease-in-out-circ, opacity $duration $ease-in-out-circ,
+      box-shadow $duration $ease-in-out-circ;
+  }
+
+  &--open {
+    width: 100%;
+    transition: none;
+  }
+
+  &-mask {
+    background: #000;
+    opacity: 0;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity $duration $ease-in-out-circ, height 0s ease $duration;
+  }
+
+  &-contentWrapper {
+    position: absolute;
+    background: $color-white;
+    height: 100%;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    right: 0;
+    width: 100%;
+    max-width: 600px;
+    transform: translateX(100%);
+  }
+
+  &-content {
+    overflow: auto;
+    z-index: 1;
+    position: relative;
+  }
+
+  &-contentHeader {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: $s;
+    background-color: $color-text;
+    color: $color-white;
+    font-size: 14px;
+
+    svg {
+      @media only screen and (min-width: 768px) {
+        cursor: pointer;
+      }
+      margin-right: $m;
+    }
+  }
+
+  &--open &-mask {
+    opacity: 0.3;
+    height: 100%;
+    transition: opacity $duration $ease-in-out-circ;
+  }
+
+  &--open &-contentWrapper {
+    transform: translateX(0);
+  }
+}
