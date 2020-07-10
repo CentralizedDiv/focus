@@ -5,10 +5,7 @@ import React from 'react';
 import Button from '../../components/Button/Button';
 import { useDrawer } from '../../components/Drawer/Drawer';
 import Table from '../../components/Table/Table';
-
-function VehicleView(vehicle: any) {
-  return <span>{vehicle.name}</span>;
-}
+import VehicleView from '../VehicleView/VehicleView';
 
 export default function VehiclesManagement() {
   const { show } = useDrawer();
@@ -62,7 +59,21 @@ export default function VehiclesManagement() {
   ];
 
   const editVehicle = (vehicle: any) => {
-    show(<VehicleView vehicle={vehicle} />, vehicle.name);
+    show(
+      <VehicleView
+        {...{
+          make: "FIAT",
+          model: "UNO",
+          year: "2011",
+          purchaseDate: "20/01/2020",
+          purchasePrice: "R$ 20.000,00",
+          isDocOk: true,
+          saleDate: "25/02/2020",
+          salePrice: "R$ 23.000,00",
+        }}
+      />,
+      vehicle.name
+    );
   };
 
   return (

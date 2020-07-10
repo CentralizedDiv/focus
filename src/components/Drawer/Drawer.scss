@@ -48,6 +48,8 @@ $duration: 0.3s;
     overflow: auto;
     z-index: 1;
     position: relative;
+    padding: 8px;
+    height: calc(100% - 16px);
   }
 
   &-contentHeader {
@@ -65,6 +67,11 @@ $duration: 0.3s;
         cursor: pointer;
       }
       margin-right: $m;
+    }
+
+    + .Drawer-content {
+      margin-top: 67px;
+      height: calc(100% - 83px);
     }
   }
 

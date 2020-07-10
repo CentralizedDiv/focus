@@ -1,0 +1,22 @@
+@import "../../utils/styles/variables";
+
+.Tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &-success {
+    background: rgba(160, 240, 170, 1);
+    color: rgba(20, 35, 25, 1);
+  }
+
+  &-warning {
+    background: rgba(240, 220, 160, 1);
+    color: rgba(35, 35, 20, 1);
+  }
+
+  &-danger {
+    background: rgba(245, 140, 140, 1);
+    color: rgb(35, 20, 20);
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../utils/styles/variables";
+
+.VehicleView {
+  &-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .Tag {
+      margin: 0 4px 4px 0;
+    }
+  }
+}
