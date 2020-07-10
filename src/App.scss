@@ -13,10 +13,10 @@ select {
 }
 
 body {
-  max-width: calc(1366px - 8px);
+  max-width: calc(1440px - 8px);
   margin: $s;
 
-  @media only screen and (min-width: 1366px) {
+  @media only screen and (min-width: 1440px) {
     margin: $s auto;
   }
 }

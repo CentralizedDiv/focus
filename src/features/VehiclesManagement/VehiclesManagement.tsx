@@ -68,7 +68,7 @@ export default function VehiclesManagement() {
           purchaseDate: "20/01/2020",
           purchasePrice: "R$ 20.000,00",
           isDocOk: true,
-          saleDate: "25/02/2020",
+          saleDate: "",
           salePrice: "R$ 23.000,00",
         }}
       />,
