@@ -55,14 +55,14 @@ $duration: 0.3s;
   &-contentHeader {
     position: fixed;
     top: 0;
-    width: 100%;
+    width: calc(100% - 32px);
     display: flex;
     align-items: center;
     padding: $l $m;
     background-color: $color-primary;
     color: $color-white;
 
-    svg {
+    > svg {
       @media only screen and (min-width: 768px) {
         cursor: pointer;
       }

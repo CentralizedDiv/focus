@@ -1,6 +1,7 @@
 import './VehiclesManagement.scss';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
 import { useDrawer } from '../../components/Drawer/Drawer';
@@ -8,7 +9,12 @@ import Table from '../../components/Table/Table';
 import VehicleView from '../VehicleView/VehicleView';
 
 export default function VehiclesManagement() {
+  const [isEditing, setIsEditing] = useState(false);
   const { show } = useDrawer();
+
+  useEffect(() => {
+    editVehicle({ name: "Fiat Uno 2011" });
+  }, [isEditing]);
 
   const columns = [
     { id: "make", label: "Marca" },
@@ -72,7 +78,19 @@ export default function VehiclesManagement() {
           salePrice: "R$ 23.000,00",
         }}
       />,
-      vehicle.name
+      <div className="VehiclesManagement-header">
+        <span>{vehicle.name}</span>
+        <div className="VehiclesManagement-headerIcons">
+          {isEditing ? (
+            <>
+              <FaTimes onClick={() => setIsEditing(false)} />
+              <FaCheck onClick={() => setIsEditing(false)} />
+            </>
+          ) : (
+            <FaEdit onClick={() => setIsEditing(true)} />
+          )}
+        </div>
+      </div>
     );
   };
 

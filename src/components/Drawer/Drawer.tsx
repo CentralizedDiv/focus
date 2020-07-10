@@ -6,14 +6,16 @@ import ReactDOM from 'react-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { atom, useRecoilState } from 'recoil';
 
-const drawerState = atom<{ content: null | React.ReactNode; header: null | string; isOpen: boolean }>({
-  key: "drawerState",
-  default: {
-    content: null,
-    header: null,
-    isOpen: false,
-  },
-});
+const drawerState = atom<{ content: null | React.ReactNode; header: null | string | React.ReactNode; isOpen: boolean }>(
+  {
+    key: "drawerState",
+    default: {
+      content: null,
+      header: null,
+      isOpen: false,
+    },
+  }
+);
 
 export default function Drawer() {
   const [{ isOpen, content, header }, setState] = useRecoilState(drawerState);
@@ -25,7 +27,7 @@ export default function Drawer() {
         {header && (
           <div className="Drawer-contentHeader">
             <FaArrowLeft onClick={() => setState({ content, header, isOpen: false })} />
-            {header}
+            {typeof header === "function" ? header() : header}
           </div>
         )}
         <div className="Drawer-content">{content}</div>
@@ -38,7 +40,7 @@ export default function Drawer() {
 export function useDrawer(baseContent?: React.ReactNode) {
   const [state, setState] = useRecoilState(drawerState);
 
-  const show = (content?: React.ReactNode, header: string | null = null) => {
+  const show = (content?: React.ReactNode, header: string | null | React.ReactNode = null) => {
     setState({
       ...state,
       content: content || baseContent,
