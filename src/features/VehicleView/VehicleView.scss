@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: -4px;
 
     .Tag {
       margin: 0 $xs 4px 0;
@@ -16,9 +17,11 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       padding: $xs 0;
+      border-bottom: 1px solid $default-border-color;
 
-      &:not(:nth-last-child(2)) {
-        border-bottom: 1px solid $default-border-color;
+      &:last-child {
+        border-bottom: 0 !important;
+        padding: $xs 0 0;
       }
 
       > span:nth-child(2) {
@@ -34,17 +37,17 @@
       }
     }
 
-    &Container {
-      padding: $s;
-      margin: $s 0;
-      -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
-      -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-      border-radius: $default-border-radius;
+    &--result {
+      :nth-last-child(2) {
+        border-bottom: none;
+      }
+    }
 
+    &Container {
       h4 {
         border-bottom: 1px solid;
         margin: 0 0 $xs;
+        padding: 0 0 $xs;
       }
     }
   }

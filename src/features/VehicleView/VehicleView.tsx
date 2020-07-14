@@ -3,13 +3,14 @@ import './VehicleView.scss';
 import cn from 'classnames';
 import React from 'react';
 
+import Card from '../../components/Card/Card';
 import Tag from '../../components/Tag/Tag';
 
-function Table(props: { title: string; rows: { label: string; value: string; result?: boolean }[] }) {
+function Table(props: { title: string; rows: { label: string; value: string; result?: boolean }[]; result?: boolean }) {
   return (
-    <div className="VehicleView-tableContainer">
+    <Card className="VehicleView-tableContainer">
       <h4>{props.title}</h4>
-      <div className="VehicleView-table">
+      <div className={cn("VehicleView-table", { "VehicleView-table--result": props.result })}>
         {props.rows.map((row, index) => (
           <div className={cn("VehicleView-tableRow", { "VehicleView-tableRow--result": row.result })} key={index}>
             <span>{row.label}</span>
@@ -17,65 +18,84 @@ function Table(props: { title: string; rows: { label: string; value: string; res
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
 export default function VehicleView(props: VehicleViewProps) {
   return (
     <div className="VehicleView">
-      <h2>
-        {props.make} {props.model} {props.year}
-      </h2>
       <div className="VehicleView-tags">
-        {props.saleDate ? (
-          <>
-            <Tag type="success">VENDIDO - {props.saleDate}</Tag>
-            <Tag type="success">LUCRO LIQUÍDO: {props.salePrice}</Tag>
-          </>
+        {/* {props.saleDate ? ( */}
+        <>
+          <Tag type="success">VENDIDO - {props.saleDate}</Tag>
+          <Tag type="success">LUCRO LIQUÍDO: {props.salePrice}</Tag>
+          {/* </>
         ) : (
-          <>
-            <Tag type="success">DOCUMENTAÇÃO: OK</Tag>
-            <Tag type="warning">10 DIAS EM ESTOQUE</Tag>
-          </>
-        )}
+          <> */}
+          <Tag type="success">DOCUMENTAÇÃO: OK</Tag>
+          <Tag type="danger">10 DIAS EM ESTOQUE</Tag>
+          <Tag type="warning">ALGUMA OUTRA INFO IMPORTANTE</Tag>
+        </>
+        {/* )} */}
       </div>
-      <div className="VehicleView-costs">
-        <Table
-          title="Custos"
-          rows={[
-            {
-              label: "Valor de Compra",
-              value: "19,000.00",
-            },
-            {
-              label: "Documentação",
-              value: "500.00",
-            },
-            {
-              label: "Preparação",
-              value: "200.00",
-            },
-            {
-              label: "Lanternagem",
-              value: "150.00",
-            },
-            {
-              label: "Mecânica",
-              value: "100.00",
-            },
-            {
-              label: "Combustível",
-              value: "50.00",
-            },
-            {
-              label: "Total",
-              value: "20,000.00",
-              result: true,
-            },
-          ]}
-        />
-      </div>
+      <Table
+        title="Identificação"
+        result={false}
+        rows={[
+          {
+            label: "Marca",
+            value: "Fiat",
+          },
+          {
+            label: "Modelo",
+            value: "Uno",
+          },
+          {
+            label: "Ano",
+            value: "2011",
+          },
+          {
+            label: "Placa",
+            value: "HSV-1987",
+          },
+        ]}
+      />
+      <Table
+        title="Custos"
+        result={true}
+        rows={[
+          {
+            label: "Valor de Compra",
+            value: "19,000.00",
+          },
+          {
+            label: "Documentação",
+            value: "500.00",
+          },
+          {
+            label: "Preparação",
+            value: "200.00",
+          },
+          {
+            label: "Lanternagem",
+            value: "150.00",
+          },
+          {
+            label: "Mecânica",
+            value: "100.00",
+          },
+          {
+            label: "Combustível",
+            value: "50.00",
+          },
+          {
+            label: "Total",
+            value: "20,000.00",
+            result: true,
+          },
+        ]}
+      />
     </div>
   );
 }
