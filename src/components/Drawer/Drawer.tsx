@@ -1,60 +1,32 @@
 import './Drawer.scss';
 
 import cn from 'classnames';
-import React from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { atom, useRecoilState } from 'recoil';
 
-const drawerState = atom<{ content: null | React.ReactNode; header: null | string | React.ReactNode; isOpen: boolean }>(
-  {
-    key: "drawerState",
-    default: {
-      content: null,
-      header: null,
-      isOpen: false,
-    },
-  }
-);
-
-export default function Drawer() {
-  const [{ isOpen, content, header }, setState] = useRecoilState(drawerState);
+export default function Drawer(props: DrawerProps) {
+  const { header } = props;
+  const [isOpen, setIsOpen] = useState(props.isOpen);
 
   return ReactDOM.createPortal(
     <div className={cn("Drawer", { "Drawer--open": isOpen })}>
-      <div className="Drawer-mask" onClick={() => setState({ content, header, isOpen: false })} />
+      <div className="Drawer-mask" onClick={() => setIsOpen(false)} />
       <div className="Drawer-contentWrapper">
         {header && (
           <div className="Drawer-contentHeader">
-            <FaArrowLeft onClick={() => setState({ content, header, isOpen: false })} />
+            <FaArrowLeft onClick={() => setIsOpen(false)} />
             {typeof header === "function" ? header() : header}
           </div>
         )}
-        <div className="Drawer-content">{content}</div>
+        <div className="Drawer-content">{props.children}</div>
       </div>
     </div>,
     document.body
   );
 }
 
-export function useDrawer(baseContent?: React.ReactNode) {
-  const [state, setState] = useRecoilState(drawerState);
-
-  const show = (content?: React.ReactNode, header: string | null | React.ReactNode = null) => {
-    setState({
-      ...state,
-      content: content || baseContent,
-      header,
-      isOpen: true,
-    });
-  };
-
-  const hide = () => {
-    setState({
-      ...state,
-      isOpen: false,
-    });
-  };
-
-  return { show, hide };
+export interface DrawerProps extends HTMLAttributes<HTMLDivElement> {
+  header?: null | string | React.ReactNode;
+  isOpen: boolean;
 }

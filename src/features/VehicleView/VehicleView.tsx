@@ -1,8 +1,10 @@
 import './VehicleView.scss';
 
 import cn from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
+import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 
+import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import Tag from '../../components/Tag/Tag';
 
@@ -26,18 +28,11 @@ export default function VehicleView(props: VehicleViewProps) {
   return (
     <div className="VehicleView">
       <div className="VehicleView-tags">
-        {/* {props.saleDate ? ( */}
-        <>
-          <Tag type="success">VENDIDO - {props.saleDate}</Tag>
-          <Tag type="success">LUCRO LIQUÍDO: {props.salePrice}</Tag>
-          {/* </>
-        ) : (
-          <> */}
-          <Tag type="success">DOCUMENTAÇÃO: OK</Tag>
-          <Tag type="danger">10 DIAS EM ESTOQUE</Tag>
-          <Tag type="warning">ALGUMA OUTRA INFO IMPORTANTE</Tag>
-        </>
-        {/* )} */}
+        <Tag type="success">VENDIDO - {props.saleDate}</Tag>
+        <Tag type="success">LUCRO LIQUÍDO: {props.salePrice}</Tag>
+        <Tag type="success">DOCUMENTAÇÃO: OK</Tag>
+        <Tag type="danger">10 DIAS EM ESTOQUE</Tag>
+        <Tag type="warning">ALGUMA OUTRA INFO IMPORTANTE</Tag>
       </div>
       <Table
         title="Identificação"
@@ -98,6 +93,51 @@ export default function VehicleView(props: VehicleViewProps) {
       />
     </div>
   );
+}
+
+export function VehicleViewHeader(props: VehicleViewHeaderProps) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const onSave = () => {
+    props.onSave();
+    setIsEditing(false);
+  };
+  const onCancel = () => {
+    props.onCancel();
+    setIsEditing(false);
+  };
+  const onEdit = () => {
+    props.onEdit();
+    setIsEditing(true);
+  };
+
+  return (
+    <div className="VehiclesManagement-header">
+      <span>Visualizar veículo</span>
+      <div className="VehiclesManagement-headerIcons">
+        {isEditing ? (
+          <>
+            <Button onClick={onSave} icon={<FaCheck />} inverse={true}>
+              Salvar
+            </Button>
+            <Button onClick={onCancel}>
+              <FaTimes />
+            </Button>
+          </>
+        ) : (
+          <Button onClick={onEdit} icon={<FaEdit />} inverse={true}>
+            Editar
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export interface VehicleViewHeaderProps {
+  onEdit: () => void;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
 export interface VehicleViewProps {
