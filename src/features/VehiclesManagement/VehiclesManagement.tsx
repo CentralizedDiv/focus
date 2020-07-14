@@ -1,7 +1,7 @@
 import './VehiclesManagement.scss';
 
 import React, { useState } from 'react';
-import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
+import { FaCheck, FaChevronRight, FaEdit, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
 import { useDrawer } from '../../components/Drawer/Drawer';
@@ -16,11 +16,17 @@ function VehicleViewHeader(props: { vehicle: { name: string } }) {
       <div className="VehiclesManagement-headerIcons">
         {isEditing ? (
           <>
-            <FaTimes onClick={() => setIsEditing(false)} />
-            <FaCheck onClick={() => setIsEditing(false)} />
+            <Button onClick={() => setIsEditing(false)} icon={<FaCheck />} inverse={true}>
+              Salvar
+            </Button>
+            <Button onClick={() => setIsEditing(false)}>
+              <FaTimes />
+            </Button>
           </>
         ) : (
-          <FaEdit onClick={() => setIsEditing(true)} />
+          <Button onClick={() => setIsEditing(true)} icon={<FaEdit />} inverse={true}>
+            Editar
+          </Button>
         )}
       </div>
     </div>
@@ -40,7 +46,11 @@ export default function VehiclesManagement() {
     {
       id: "actions",
       label: "",
-      render: () => <Button onClick={() => editVehicle({ name: "Fiat Uno 2011" })}>Editar</Button>,
+      render: () => (
+        <Button onClick={() => editVehicle({ name: "Fiat Uno 2011" })}>
+          <FaChevronRight />
+        </Button>
+      ),
     },
   ];
   const data = [

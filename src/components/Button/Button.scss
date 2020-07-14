@@ -6,9 +6,24 @@
   border-radius: $default-border-radius;
   border: none;
   outline: none;
-  padding: $s $m;
+  padding: $s 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 
   &:not(:disabled) {
     cursor: pointer;
+  }
+
+  &--withIcon {
+    > svg {
+      margin-right: $s;
+    }
+  }
+
+  &--inverse {
+    background-color: $color-white;
+    color: $color-primary;
   }
 }
