@@ -1,6 +1,6 @@
 import './VehiclesManagement.scss';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
@@ -8,13 +8,27 @@ import { useDrawer } from '../../components/Drawer/Drawer';
 import Table from '../../components/Table/Table';
 import VehicleView from '../VehicleView/VehicleView';
 
-export default function VehiclesManagement() {
+function VehicleViewHeader(props: { vehicle: { name: string } }) {
   const [isEditing, setIsEditing] = useState(false);
-  const { show } = useDrawer();
+  return (
+    <div className="VehiclesManagement-header">
+      <span>Visualizar veículo</span>
+      <div className="VehiclesManagement-headerIcons">
+        {isEditing ? (
+          <>
+            <FaTimes onClick={() => setIsEditing(false)} />
+            <FaCheck onClick={() => setIsEditing(false)} />
+          </>
+        ) : (
+          <FaEdit onClick={() => setIsEditing(true)} />
+        )}
+      </div>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    editVehicle({ name: "Fiat Uno 2011" });
-  }, [isEditing]);
+export default function VehiclesManagement() {
+  const { show } = useDrawer();
 
   const columns = [
     { id: "make", label: "Marca" },
@@ -74,23 +88,11 @@ export default function VehiclesManagement() {
           purchaseDate: "20/01/2020",
           purchasePrice: "R$ 20.000,00",
           isDocOk: true,
-          saleDate: "",
+          saleDate: "25/02/2020",
           salePrice: "R$ 23.000,00",
         }}
       />,
-      <div className="VehiclesManagement-header">
-        <span>{vehicle.name}</span>
-        <div className="VehiclesManagement-headerIcons">
-          {isEditing ? (
-            <>
-              <FaTimes onClick={() => setIsEditing(false)} />
-              <FaCheck onClick={() => setIsEditing(false)} />
-            </>
-          ) : (
-            <FaEdit onClick={() => setIsEditing(true)} />
-          )}
-        </div>
-      </div>
+      <VehicleViewHeader vehicle={vehicle} />
     );
   };
 
