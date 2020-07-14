@@ -51,4 +51,22 @@
       }
     }
   }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    &Icons {
+      display: flex;
+      align-items: center;
+
+      > button {
+        &:nth-child(1) + button {
+          margin-left: $s;
+        }
+      }
+    }
+  }
 }

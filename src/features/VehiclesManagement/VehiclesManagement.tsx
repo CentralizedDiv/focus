@@ -1,6 +1,6 @@
 import './VehiclesManagement.scss';
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
@@ -19,7 +19,7 @@ const data = [
   },
   {
     make: "Fiat",
-    model: "Uno",
+    model: "Siena",
     year: "2011",
     licensePlate: "HSV-1987",
     purchasePrice: "R$ 20.000,00",
@@ -27,7 +27,7 @@ const data = [
   },
   {
     make: "Fiat",
-    model: "Uno",
+    model: "Argo",
     year: "2011",
     licensePlate: "HSV-1987",
     purchasePrice: "R$ 20.000,00",
@@ -35,7 +35,7 @@ const data = [
   },
   {
     make: "Fiat",
-    model: "Uno",
+    model: "Punto",
     year: "2011",
     licensePlate: "HSV-1987",
     purchasePrice: "R$ 20.000,00",
@@ -45,6 +45,11 @@ const data = [
 
 export default function VehiclesManagement() {
   const [currentVehicle, setCurrentVehicle] = useState<{}>();
+  const [filteredData, setFilteredData] = useState(data);
+
+  const updateFiltered = useCallback((search) => {
+    setFilteredData(data.filter((v) => v.model.toLowerCase().indexOf(search.toLowerCase()) > -1));
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -58,7 +63,11 @@ export default function VehiclesManagement() {
         id: "actions",
         label: "",
         render: () => (
-          <Button onClick={() => setCurrentVehicle({})}>
+          <Button
+            onClick={() => {
+              setCurrentVehicle({});
+            }}
+          >
             <FaChevronRight />
           </Button>
         ),
@@ -69,10 +78,16 @@ export default function VehiclesManagement() {
 
   return (
     <div className="VehiclesManagement">
-      <h2>Gerenciamento de Veículos</h2>
+      <div className="VehiclesManagement-header">
+        <h2>Gerenciamento de Veículos</h2>
+        <label htmlFor="search">
+          Pesquisar
+          <input id="search" placeholder="Celta 2010" onChange={(ev) => updateFiltered(ev.target.value)} />
+        </label>
+      </div>
       <Table
         columns={columns}
-        data={data}
+        data={filteredData}
         mobile={{
           rotationLabel: "Comparar",
           mainColumn: (row: any) => (
@@ -95,6 +110,7 @@ export default function VehiclesManagement() {
             onCancel={() => console.log("cancel")}
           />
         }
+        onClose={() => setCurrentVehicle(undefined)}
       >
         <VehicleView
           make="FIAT"

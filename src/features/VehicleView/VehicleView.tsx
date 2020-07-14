@@ -112,9 +112,9 @@ export function VehicleViewHeader(props: VehicleViewHeaderProps) {
   };
 
   return (
-    <div className="VehiclesManagement-header">
+    <div className="VehicleView-header">
       <span>Visualizar veículo</span>
-      <div className="VehiclesManagement-headerIcons">
+      <div className="VehicleView-headerIcons">
         {isEditing ? (
           <>
             <Button onClick={onSave} icon={<FaCheck />} inverse={true}>

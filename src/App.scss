@@ -7,7 +7,8 @@ html {
 
 html,
 button,
-select {
+select,
+input {
   font-family: $font-family;
   color: $color-text;
   font-size: 14px;
@@ -32,4 +33,12 @@ h3,
 h4 {
   color: $color-primary;
   font-weight: $font-weight-bold;
+}
+
+input {
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid #d8d8d8;
 }

@@ -1,8 +1,10 @@
 @import "../../utils/styles/variables";
 
 .Header {
-  margin: -$s;
+  margin: -8px -8px 0 -8px;
   padding: $l $m;
-  background-color: $color-primary;
-  color: $color-white;
+  background-color: #0b3850;
+  color: #fff;
+  font-size: $m;
+  line-height: 18px;
 }
