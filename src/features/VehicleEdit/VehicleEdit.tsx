@@ -10,13 +10,13 @@ import FormGroup from '../../components/FormGroup/FormGroup';
 import Input from '../../components/Input/Input';
 
 function AddCostForm(props: AddCostFormProps) {
-  const { register, trigger, getValues } = useForm<{ name: string; value: string }>();
+  const { register, trigger, getValues, errors } = useForm<{ name: string; value: string }>();
   return (
     <div className="VehicleEdit-addCostForm">
       <Card>
         <FormGroup title="Novo Custo">
-          <Input id="name" label="Custo" register={register} required={true} />
-          <Input id="value" label="Valor" register={register} required={true} />
+          <Input id="name" label="Custo" register={register} required={true} error={errors.name} />
+          <Input id="value" label="Valor" register={register} required={true} error={errors.value} />
           <div className="VehicleEdit-addCostFormButtons">
             <Button
               icon={<FaCheck />}
@@ -88,7 +88,20 @@ export default function VehicleEdit(props: VehicleEditProps) {
               }}
             />
           ) : (
-            <Button className="VehicleEdit-addCost" icon={<FaPlusCircle />} onClick={() => setIsAdding(true)}>
+            <Button
+              className="VehicleEdit-addCost"
+              icon={<FaPlusCircle />}
+              onClick={() => {
+                setIsAdding(true);
+                setTimeout(() => {
+                  const drawer = document.getElementsByClassName("Drawer-content")?.[0];
+                  if (drawer) {
+                    drawer.scrollTop = drawer.scrollHeight;
+                  }
+                });
+              }}
+              inverse={true}
+            >
               Adicionar Custo
             </Button>
           )}

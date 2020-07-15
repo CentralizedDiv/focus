@@ -50,6 +50,7 @@ $duration: 0.3s;
     position: relative;
     padding: $m;
     height: calc(100% - 16px);
+    scroll-behavior: smooth;
   }
 
   &-contentHeader {
