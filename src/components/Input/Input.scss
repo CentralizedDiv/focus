@@ -1,0 +1,22 @@
+@import "../../utils/styles/variables";
+
+.Input {
+  > input {
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  &-labelRequired {
+    font-style: italic;
+    color: rgba(84, 106, 123, 0.6);
+    font-size: 12px;
+    transition: color 0.2s ease-in-out;
+  }
+
+  &--error > input {
+    border-color: #f58c8c;
+  }
+
+  &--error &-labelRequired {
+    color: #f58c8c;
+  }
+}

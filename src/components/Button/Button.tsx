@@ -7,6 +7,7 @@ export default function Button(_props: ButtonProps) {
   const { icon, inverse, ...props } = _props;
   return (
     <button
+      type="button"
       {...props}
       className={cn("Button", props.className, { "Button--withIcon": icon, "Button--inverse": inverse })}
     >

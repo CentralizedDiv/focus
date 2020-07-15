@@ -1,7 +1,7 @@
 import './VehicleView.scss';
 
 import cn from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
@@ -96,36 +96,21 @@ export default function VehicleView(props: VehicleViewProps) {
 }
 
 export function VehicleViewHeader(props: VehicleViewHeaderProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const onSave = () => {
-    props.onSave();
-    setIsEditing(false);
-  };
-  const onCancel = () => {
-    props.onCancel();
-    setIsEditing(false);
-  };
-  const onEdit = () => {
-    props.onEdit();
-    setIsEditing(true);
-  };
-
   return (
     <div className="VehicleView-header">
       <span>Visualizar veículo</span>
       <div className="VehicleView-headerIcons">
-        {isEditing ? (
+        {props.isEditing ? (
           <>
-            <Button onClick={onSave} icon={<FaCheck />} inverse={true}>
+            <Button onClick={props.onSave} icon={<FaCheck />} inverse={true}>
               Salvar
             </Button>
-            <Button onClick={onCancel}>
+            <Button onClick={props.onCancel}>
               <FaTimes />
             </Button>
           </>
         ) : (
-          <Button onClick={onEdit} icon={<FaEdit />} inverse={true}>
+          <Button onClick={props.onEdit} icon={<FaEdit />} inverse={true}>
             Editar
           </Button>
         )}
@@ -138,6 +123,7 @@ export interface VehicleViewHeaderProps {
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
+  isEditing: boolean;
 }
 
 export interface VehicleViewProps {

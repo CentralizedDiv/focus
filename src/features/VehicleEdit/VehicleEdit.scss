@@ -1,0 +1,17 @@
+@import "../../utils/styles/variables";
+
+.VehicleEdit {
+  &-addCostFormButtons {
+    display: flex;
+    justify-content: flex-end;
+
+    > button {
+      margin: 0 0 0 $s;
+    }
+  }
+
+  &-addCost {
+    width: 100%;
+    margin-top: $m;
+  }
+}

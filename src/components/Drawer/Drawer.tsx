@@ -27,6 +27,10 @@ export default function Drawer(props: DrawerProps) {
           <div className="Drawer-contentHeader">
             <FaArrowLeft
               onClick={() => {
+                if (props.onClickArrowLeft) {
+                  props.onClickArrowLeft();
+                  return;
+                }
                 setIsOpen(false);
                 props.onClose?.();
               }}
@@ -45,4 +49,5 @@ export interface DrawerProps extends HTMLAttributes<HTMLDivElement> {
   header?: null | string | React.ReactNode;
   isOpen: boolean;
   onClose?: () => void;
+  onClickArrowLeft?: () => void;
 }
