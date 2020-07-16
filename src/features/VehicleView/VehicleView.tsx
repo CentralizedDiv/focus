@@ -98,7 +98,7 @@ export default function VehicleView(props: VehicleViewProps) {
 export function VehicleViewHeader(props: VehicleViewHeaderProps) {
   return (
     <div className="VehicleView-header">
-      <span>Visualizar veículo</span>
+      <span>{props.label}</span>
       <div className="VehicleView-headerIcons">
         {props.isEditing ? (
           <>
@@ -124,6 +124,7 @@ export interface VehicleViewHeaderProps {
   onSave: () => void;
   onCancel: () => void;
   isEditing: boolean;
+  label: string;
 }
 
 export interface VehicleViewProps {

@@ -1,7 +1,7 @@
 import './VehicleEdit.scss';
 
 import React, { useState } from 'react';
-import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { FieldError, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import { FaCheck, FaPlusCircle, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
@@ -46,13 +46,12 @@ interface AddCostFormProps {
 
 export default function VehicleEdit(props: VehicleEditProps) {
   const [isAdding, setIsAdding] = useState(false);
-  const { register, control, errors } = useFormContext<VehicleEditProps>();
+  const { register, errors } = useFormContext<VehicleEditProps & { [key: string]: string }>();
 
   const { fields, append } = useFieldArray({
-    control,
     name: "costs",
   });
-
+  console.log(errors);
   return (
     <div className="VehicleEdit">
       <form>
@@ -77,7 +76,14 @@ export default function VehicleEdit(props: VehicleEditProps) {
         </FormGroup>
         <FormGroup title="Custos">
           {fields.map((cost) => (
-            <Input key={cost.id} id={cost.value} label={cost.value} register={register} required={true} />
+            <Input
+              key={cost.id}
+              id={cost.value}
+              label={cost.value}
+              register={register}
+              required={true}
+              error={errors[cost.value as string] as FieldError}
+            />
           ))}
           {isAdding ? (
             <AddCostForm

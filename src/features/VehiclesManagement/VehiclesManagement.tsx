@@ -88,6 +88,14 @@ export default function VehiclesManagement() {
     <div className="VehiclesManagement">
       <div className="VehiclesManagement-header">
         <h2>Gerenciamento de Veículos</h2>
+        <Button
+          onClick={() => {
+            setCurrentVehicle({});
+            setIsEditing(true);
+          }}
+        >
+          Adicionar Veículo
+        </Button>
         <label htmlFor="search">
           Pesquisar
           <input id="search" placeholder="Celta 2010" onChange={(ev) => updateFiltered(ev.target.value)} />
@@ -126,6 +134,7 @@ export default function VehiclesManagement() {
               setIsEditing(false);
             }}
             isEditing={isEditing}
+            label="Visualizar Veículo"
           />
         }
         onClose={() => setCurrentVehicle(undefined)}
