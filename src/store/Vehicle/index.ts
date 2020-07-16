@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilState } from 'recoil';
+import { selector } from 'recoil';
 
 import { getVehicleList } from '../../api/Vehicle';
 import { Vehicle } from './model';

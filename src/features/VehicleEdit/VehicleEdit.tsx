@@ -48,10 +48,10 @@ export default function VehicleEdit(props: VehicleEditProps) {
   const [isAdding, setIsAdding] = useState(false);
   const { register, errors } = useFormContext<VehicleEditProps & { [key: string]: string }>();
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "costs",
   });
-  console.log(errors);
+
   return (
     <div className="VehicleEdit">
       <form>
@@ -75,15 +75,19 @@ export default function VehicleEdit(props: VehicleEditProps) {
           />
         </FormGroup>
         <FormGroup title="Custos">
-          {fields.map((cost) => (
-            <Input
-              key={cost.id}
-              id={cost.value}
-              label={cost.value}
-              register={register}
-              required={true}
-              error={errors[cost.value as string] as FieldError}
-            />
+          {fields.map((cost, index) => (
+            <div className="VehicleEdit-removeCost" key={index}>
+              <Input
+                id={`costs[${index}].value`}
+                label={cost.value}
+                register={register}
+                required={true}
+                error={errors[cost.value as string] as FieldError}
+              />
+              <Button inverse={true} onClick={() => remove(index)}>
+                <FaTimes />
+              </Button>
+            </div>
           ))}
           {isAdding ? (
             <AddCostForm
