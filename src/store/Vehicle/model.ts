@@ -3,6 +3,10 @@ export type Transaction = {
   price: number;
   date: number;
 };
+export type Cost = {
+  label: string;
+  value: number;
+};
 export interface Vehicle {
   make: string;
   model: string;
@@ -10,6 +14,6 @@ export interface Vehicle {
   licensePlate: string;
   docStatus: DocStatus;
   purchase: Transaction;
-  sale: Transaction;
-  costs: { [key: string]: number };
+  sale?: Transaction;
+  costs: Cost[];
 }

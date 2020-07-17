@@ -1,14 +1,23 @@
 import './VehicleView.scss';
 
 import cn from 'classnames';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import Tag from '../../components/Tag/Tag';
+import { Vehicle } from '../../store/Vehicle/model';
+import {
+    formatCurrency, formatLicensePlate, formatTimestamp
+} from '../../utils/functions/formatters';
+import { subtractDates } from '../../utils/functions/utils';
 
-function Table(props: { title: string; rows: { label: string; value: string; result?: boolean }[]; result?: boolean }) {
+function Table(props: {
+  title: string;
+  rows: { label: string; value: string | number; result?: boolean }[];
+  result?: boolean;
+}) {
   return (
     <Card className="VehicleView-tableContainer">
       <h4>{props.title}</h4>
@@ -25,14 +34,21 @@ function Table(props: { title: string; rows: { label: string; value: string; res
 }
 
 export default function VehicleView(props: VehicleViewProps) {
+  const totalCosts = useMemo(() => {
+    return Object.values(props.vehicle.costs).reduce((total, cost) => total + cost.value, 0);
+  }, [props.vehicle.costs]);
   return (
     <div className="VehicleView">
       <div className="VehicleView-tags">
-        <Tag type="success">VENDIDO - {props.saleDate}</Tag>
-        <Tag type="success">LUCRO LIQUÍDO: {props.salePrice}</Tag>
-        <Tag type="success">DOCUMENTAÇÃO: OK</Tag>
-        <Tag type="danger">10 DIAS EM ESTOQUE</Tag>
-        <Tag type="warning">ALGUMA OUTRA INFO IMPORTANTE</Tag>
+        {props.vehicle.sale ? (
+          <>
+            <Tag type="success">VENDIDO - {formatTimestamp(props.vehicle.sale.date)}</Tag>
+            <Tag type="success">LUCRO LIQUÍDO: {formatCurrency(props.vehicle.sale.price - totalCosts)}</Tag>
+          </>
+        ) : (
+          <Tag type="danger">{subtractDates(new Date().getTime(), props.vehicle.purchase.date)} DIAS EM ESTOQUE</Tag>
+        )}
+        <Tag type="success">DOCUMENTAÇÃO: {props.vehicle.docStatus}</Tag>
       </div>
       <Table
         title="Identificação"
@@ -40,56 +56,35 @@ export default function VehicleView(props: VehicleViewProps) {
         rows={[
           {
             label: "Marca",
-            value: "Fiat",
+            value: props.vehicle.make,
           },
           {
             label: "Modelo",
-            value: "Uno",
+            value: props.vehicle.model,
           },
           {
             label: "Ano",
-            value: "2011",
+            value: props.vehicle.year,
           },
           {
             label: "Placa",
-            value: "HSV-1987",
+            value: formatLicensePlate(props.vehicle.licensePlate),
           },
         ]}
       />
       <Table
         title="Custos"
         result={true}
-        rows={[
-          {
-            label: "Valor de Compra",
-            value: "19,000.00",
-          },
-          {
-            label: "Documentação",
-            value: "500.00",
-          },
-          {
-            label: "Preparação",
-            value: "200.00",
-          },
-          {
-            label: "Lanternagem",
-            value: "150.00",
-          },
-          {
-            label: "Mecânica",
-            value: "100.00",
-          },
-          {
-            label: "Combustível",
-            value: "50.00",
-          },
-          {
+        rows={Object.values(props.vehicle.costs)
+          .map<{ label: string; value: string | number; result?: boolean }>(({ label, value }) => ({
+            label,
+            value: formatCurrency(value),
+          }))
+          .concat({
             label: "Total",
-            value: "20,000.00",
+            value: formatCurrency(totalCosts),
             result: true,
-          },
-        ]}
+          })}
       />
     </div>
   );
@@ -100,7 +95,7 @@ export function VehicleViewHeader(props: VehicleViewHeaderProps) {
     <div className="VehicleView-header">
       <span>{props.label}</span>
       <div className="VehicleView-headerIcons">
-        {props.isEditing ? (
+        {props.enableSaveButton ? (
           <>
             <Button onClick={props.onSave} icon={<FaCheck />} inverse={true}>
               Salvar
@@ -123,17 +118,10 @@ export interface VehicleViewHeaderProps {
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
-  isEditing: boolean;
+  enableSaveButton: boolean;
   label: string;
 }
 
 export interface VehicleViewProps {
-  make: string;
-  model: string;
-  year: string;
-  purchaseDate: string;
-  purchasePrice: string;
-  isDocOk: boolean;
-  saleDate: string;
-  salePrice: string;
+  vehicle: Vehicle;
 }

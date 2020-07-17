@@ -1,79 +1,75 @@
 import './VehiclesManagement.scss';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { FaChevronRight } from 'react-icons/fa';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Button from '../../components/Button/Button';
 import Drawer from '../../components/Drawer/Drawer';
 import Table from '../../components/Table/Table';
+import {
+    $currentVehicle, $filteredVehicleList, $forceDrawer, $isCreating, $isDrawerOpen, $isEditing,
+    $searchQuery
+} from '../../store/Vehicle';
+import { Vehicle } from '../../store/Vehicle/model';
+import {
+    formatCurrency, formatLicensePlate, formatTimestamp
+} from '../../utils/functions/formatters';
 import VehicleEdit from '../VehicleEdit/VehicleEdit';
 import VehicleView, { VehicleViewHeader } from '../VehicleView/VehicleView';
 
-const data = [
-  {
-    make: "Fiat",
-    model: "Uno",
-    year: "2011",
-    licensePlate: "HSV-1987",
-    purchasePrice: "R$ 20.000,00",
-    purchaseDate: "01/01/2020",
-  },
-  {
-    make: "Fiat",
-    model: "Siena",
-    year: "2011",
-    licensePlate: "HSV-1987",
-    purchasePrice: "R$ 20.000,00",
-    purchaseDate: "01/01/2020",
-  },
-  {
-    make: "Fiat",
-    model: "Argo",
-    year: "2011",
-    licensePlate: "HSV-1987",
-    purchasePrice: "R$ 20.000,00",
-    purchaseDate: "01/01/2020",
-  },
-  {
-    make: "Fiat",
-    model: "Punto",
-    year: "2011",
-    licensePlate: "HSV-1987",
-    purchasePrice: "R$ 20.000,00",
-    purchaseDate: "01/01/2020",
-  },
-];
-
 export default function VehiclesManagement() {
-  const methods = useForm({
-    defaultValues: {
-      costs: ["Valor de Compra", "Documentação", "Preparação", "Lanternagem", "Mecânica", "Combustível"],
-    },
-  });
-  const [currentVehicle, setCurrentVehicle] = useState<{}>();
-  const [filteredData, setFilteredData] = useState(data);
-  const [isEditing, setIsEditing] = useState(false);
+  const filteredVehicleList = useRecoilValue($filteredVehicleList);
+  const isDrawerOpen = useRecoilValue($isDrawerOpen);
+  const [currentVehicle, setCurrentVehicle] = useRecoilState($currentVehicle);
+  const forceDrawer = useSetRecoilState($forceDrawer);
+  const [isCreating, setIsCreating] = useRecoilState($isCreating);
+  const [isEditing, setIsEditing] = useRecoilState($isEditing);
+  const setSearchQuery = useSetRecoilState($searchQuery);
+  const { reset, ...methods } = useForm<Vehicle>();
 
-  const updateFiltered = useCallback((search) => {
-    setFilteredData(data.filter((v) => v.model.toLowerCase().indexOf(search.toLowerCase()) > -1));
-  }, []);
+  console.log("rerender");
+
+  useEffect(() => {
+    if (currentVehicle) {
+      reset(currentVehicle);
+    }
+  }, [currentVehicle, reset]);
 
   const columns = useMemo(
     () => [
       { id: "make", label: "Marca" },
       { id: "model", label: "Modelo" },
       { id: "year", label: "Ano" },
-      { id: "licensePlate", label: "Placa" },
-      { id: "purchasePrice", label: "Preço de Compra" },
-      { id: "purchaseDate", label: "Data de Compra" },
+      {
+        id: "licensePlate",
+        label: "Placa",
+        render: (v: Vehicle) => {
+          return <span>{formatLicensePlate(v.licensePlate)}</span>;
+        },
+      },
+      {
+        id: "purchase.price",
+        label: "Preço de Compra",
+        render: (row: Vehicle) => {
+          return <span>{formatCurrency(row.purchase.price)}</span>;
+        },
+      },
+      {
+        id: "purchase.date",
+        label: "Data de Compra",
+        render: (v: Vehicle) => {
+          return <span>{formatTimestamp(v?.purchase.date)}</span>;
+        },
+      },
       {
         id: "actions",
         label: "",
-        render: () => (
+        render: (v: Vehicle) => (
           <Button
             onClick={() => {
-              setCurrentVehicle({});
+              setCurrentVehicle(v);
             }}
           >
             <FaChevronRight />
@@ -81,8 +77,21 @@ export default function VehiclesManagement() {
         ),
       },
     ],
-    []
+    [setCurrentVehicle]
   );
+
+  const handleDrawerClose = useCallback(() => {
+    if (isEditing) {
+      setIsEditing(false);
+    } else {
+      forceDrawer(false);
+      setTimeout(() => {
+        setIsCreating(false);
+        setCurrentVehicle(null);
+        forceDrawer(undefined);
+      }, 200);
+    }
+  }, [isEditing, setIsCreating, setIsEditing, forceDrawer, setCurrentVehicle]);
 
   return (
     <div className="VehiclesManagement">
@@ -90,20 +99,19 @@ export default function VehiclesManagement() {
         <h2>Gerenciamento de Veículos</h2>
         <Button
           onClick={() => {
-            setCurrentVehicle({});
-            setIsEditing(true);
+            setIsCreating(true);
           }}
         >
           Adicionar Veículo
         </Button>
         <label htmlFor="search">
           Pesquisar
-          <input id="search" placeholder="Celta 2010" onChange={(ev) => updateFiltered(ev.target.value)} />
+          <input id="search" placeholder="Celta 2010" onChange={(ev) => setSearchQuery(ev.target.value)} />
         </label>
       </div>
       <Table
         columns={columns}
-        data={filteredData}
+        data={filteredVehicleList}
         mobile={{
           rotationLabel: "Comparar",
           mainColumn: (row: any) => (
@@ -112,59 +120,47 @@ export default function VehiclesManagement() {
             </span>
           ),
           secondaryColumn: "year",
-          defaultRotationColumn: "purchasePrice",
+          defaultRotationColumn: "purchase.price",
           hiddenColumns: ["make", "model", "actions"],
-          onClickRow: () => setCurrentVehicle({}),
+          onClickRow: (row: Vehicle) => setCurrentVehicle(row),
         }}
       />
       <Drawer
-        isOpen={currentVehicle !== undefined}
+        isOpen={isDrawerOpen}
         header={
           <VehicleViewHeader
             onSave={async () => {
               const valid = await methods.trigger();
               if (valid) {
+                const vehicle = methods.getValues();
+                setCurrentVehicle(vehicle);
                 setIsEditing(false);
+                setIsCreating(false);
               }
             }}
             onEdit={() => {
               setIsEditing(true);
             }}
             onCancel={() => {
-              setIsEditing(false);
+              handleDrawerClose();
             }}
-            isEditing={isEditing}
-            label="Visualizar Veículo"
+            enableSaveButton={isEditing || isCreating}
+            label={isEditing ? "Editar Veículo" : isCreating ? "Cadastrar Veículo" : "Visualizar Veículo"}
           />
         }
-        onClose={() => setCurrentVehicle(undefined)}
-        onClickArrowLeft={isEditing ? () => setIsEditing(false) : undefined}
+        onClose={() => {
+          handleDrawerClose();
+        }}
+        onClickArrowLeft={() => {
+          handleDrawerClose();
+        }}
       >
-        {isEditing ? (
-          <FormProvider {...methods}>
-            <VehicleEdit
-              make="FIAT"
-              model="UNO"
-              year="2011"
-              licensePlate="HSV-1987"
-              purchaseDate="20/01/2020"
-              purchasePrice="R$ 20.000,00"
-              isDocOk={true}
-              saleDate="25/02/2020"
-              salePrice="R$ 23.000,00"
-            />
+        {isEditing || isCreating ? (
+          <FormProvider {...{ ...methods, reset }}>
+            <VehicleEdit vehicle={currentVehicle} />
           </FormProvider>
         ) : (
-          <VehicleView
-            make="FIAT"
-            model="UNO"
-            year="2011"
-            purchaseDate="20/01/2020"
-            purchasePrice="R$ 20.000,00"
-            isDocOk={true}
-            saleDate="25/02/2020"
-            salePrice="R$ 23.000,00"
-          />
+          currentVehicle && <VehicleView vehicle={currentVehicle} />
         )}
       </Drawer>
     </div>

@@ -13,20 +13,20 @@ type RefReturn =
   | undefined;
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  id: string;
+  name: string;
   label: string;
   error?: FieldError;
   register?: ({ required }: { required?: Message | ValidationRule<boolean> }) => RefReturn;
 }
 
-export default function Input({ id, label, register, required, error, ...props }: InputProps) {
+export default function Input({ name, label, register, required, error, ...props }: InputProps) {
   return (
-    <label htmlFor={id} className={cn("Input", { "Input--error": error })}>
+    <label htmlFor={name} className={cn("Input", { "Input--error": error })}>
       <div className="Input-labelContainer">
         <span className="Input-label">{label}</span>{" "}
         {required && <span className="Input-labelRequired">Obrigatório</span>}
       </div>
-      <input name={id} id={id} ref={register?.({ required })} {...props} />
+      <input name={name} id={name} ref={register?.({ required })} {...props} />
     </label>
   );
 }

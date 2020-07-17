@@ -2,12 +2,14 @@ import './VehicleEdit.scss';
 
 import React, { useState } from 'react';
 import { FieldError, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { DeepMap } from 'react-hook-form/dist/types/utils';
 import { FaCheck, FaPlusCircle, FaTimes } from 'react-icons/fa';
 
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import FormGroup from '../../components/FormGroup/FormGroup';
 import Input from '../../components/Input/Input';
+import { Vehicle } from '../../store/Vehicle/model';
 
 function AddCostForm(props: AddCostFormProps) {
   const { register, trigger, getValues, errors } = useForm<{ name: string; value: string }>();
@@ -15,8 +17,8 @@ function AddCostForm(props: AddCostFormProps) {
     <div className="VehicleEdit-addCostForm">
       <Card>
         <FormGroup title="Novo Custo">
-          <Input id="name" label="Custo" register={register} required={true} error={errors.name} />
-          <Input id="value" label="Valor" register={register} required={true} error={errors.value} />
+          <Input name="name" label="Custo" register={register} required={true} error={errors.name} />
+          <Input name="value" label="Valor" register={register} required={true} error={errors.value} />
           <div className="VehicleEdit-addCostFormButtons">
             <Button
               icon={<FaCheck />}
@@ -52,43 +54,64 @@ export default function VehicleEdit(props: VehicleEditProps) {
     name: "costs",
   });
 
+  const vehicle: Vehicle = props.vehicle || {
+    make: "",
+    model: "",
+    year: "",
+    licensePlate: "",
+    docStatus: "OK",
+    purchase: {
+      price: 0,
+      date: 0,
+    },
+    costs: [],
+  };
+
   return (
     <div className="VehicleEdit">
       <form>
         <FormGroup title="Identificação">
           <Input
-            id="make"
+            name="make"
             label="Marca"
             register={register}
             required={true}
-            defaultValue={props.make}
+            defaultValue={vehicle.make}
             error={errors.make}
           />
-          <Input id="model" label="Modelo" register={register} required={true} defaultValue={props.model} />
-          <Input id="year" label="Ano" register={register} required={true} defaultValue={props.year} />
+          <Input name="model" label="Modelo" register={register} required={true} defaultValue={vehicle.model} />
+          <Input name="year" label="Ano" register={register} required={true} defaultValue={vehicle.year} />
           <Input
-            id="licensePlate"
+            name="licensePlate"
             label="Placa"
             register={register}
             required={true}
-            defaultValue={props.licensePlate}
+            defaultValue={vehicle.licensePlate}
           />
         </FormGroup>
         <FormGroup title="Custos">
-          {fields.map((cost, index) => (
-            <div className="VehicleEdit-removeCost" key={index}>
-              <Input
-                id={`costs[${index}].value`}
-                label={cost.value}
-                register={register}
-                required={true}
-                error={errors[cost.value as string] as FieldError}
-              />
-              <Button inverse={true} onClick={() => remove(index)}>
-                <FaTimes />
-              </Button>
-            </div>
-          ))}
+          {fields.map((cost, index) => {
+            let _errors = errors.costs as Array<DeepMap<{ [key: string]: string }, FieldError>> | undefined;
+            let error: FieldError | undefined;
+            if (_errors) {
+              error = _errors?.[index]?.[cost.label];
+            }
+            return (
+              <div className="VehicleEdit-removeCost" key={cost.id}>
+                <Input
+                  name={`costs[${index}].${cost.label}`}
+                  label={cost.label}
+                  defaultValue={cost.value}
+                  register={register}
+                  required={true}
+                  error={error}
+                />
+                <Button inverse={true} onClick={() => remove(index)}>
+                  <FaTimes />
+                </Button>
+              </div>
+            );
+          })}
           {isAdding ? (
             <AddCostForm
               onCancel={() => setIsAdding(false)}
@@ -122,13 +145,5 @@ export default function VehicleEdit(props: VehicleEditProps) {
 }
 
 export interface VehicleEditProps {
-  make: string;
-  model: string;
-  licensePlate: string;
-  year: string;
-  purchaseDate: string;
-  purchasePrice: string;
-  isDocOk: boolean;
-  saleDate: string;
-  salePrice: string;
+  vehicle: Vehicle | null;
 }

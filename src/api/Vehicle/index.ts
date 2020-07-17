@@ -18,13 +18,14 @@ export function getVehicleList(): Promise<Vehicle[]> {
             price: 23000,
             date: 1579068800000,
           },
-          costs: {
-            Documentação: 500,
-            Preparação: 200,
-            Lanternagem: 150,
-            Mecânica: 100,
-            Combustível: 50,
-          },
+          costs: [
+            { label: "Valor de Compra", value: 20000 },
+            { label: "Documentação", value: 500 },
+            { label: "Preparação", value: 200 },
+            { label: "Lanternagem", value: 150 },
+            { label: "Mecânica", value: 100 },
+            { label: "Combustível", value: 50 },
+          ],
         },
       ]);
     }, 1000)

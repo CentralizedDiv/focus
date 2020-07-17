@@ -1,14 +1,33 @@
 import './Table.scss';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 
 import useMediaQuery from '../../utils/hooks/useMediaQuery';
 import Select, { Option } from '../Select/Select';
 
+function deepReadObject(obj: any, deepKey: string) {
+  const keys = deepKey.split(".");
+  const deepValue = keys.reduce((currObj, currKey) => currObj[currKey], obj);
+  return deepValue;
+}
+
 export default function Table(props: TableProps) {
   const [rotationColumn, setRotationColumn] = useState(props.mobile.defaultRotationColumn);
   const isMobile = useMediaQuery("(max-width: 767px)");
+
+  const findColumn = useCallback((id: string) => props.columns.find((col) => col.id === id), [props.columns]);
+  const renderRotationColumn = useCallback(
+    (row) => {
+      const col = findColumn(rotationColumn);
+      if (typeof col?.render === "function") {
+        return col.render(row);
+      } else {
+        return deepReadObject(row, rotationColumn);
+      }
+    },
+    [findColumn, rotationColumn]
+  );
 
   return (
     <div className="Table">
@@ -29,9 +48,9 @@ export default function Table(props: TableProps) {
                       id !== props.mobile.mainColumn &&
                       id !== props.mobile.secondaryColumn
                   )
-                  .map(({ id, label }) => (
-                    <Option value={id} key={id}>
-                      {label}
+                  .map((column) => (
+                    <Option value={column.id} key={column.id}>
+                      {column.label}
                     </Option>
                   ))}
               </Select>
@@ -39,18 +58,22 @@ export default function Table(props: TableProps) {
           </div>
           <div className="Table-mobileBody">
             {props.data.map((row, index) => (
-              <div key={index} className="Table-mobileRow" onClick={props.mobile.onClickRow || props.onClickRow}>
+              <div
+                key={index}
+                className="Table-mobileRow"
+                onClick={props.mobile.onClickRow?.bind(null, row) || props.onClickRow?.bind(null, row)}
+              >
                 <h3>
                   {typeof props.mobile.mainColumn === "function"
                     ? props.mobile.mainColumn(row)
-                    : row[props.mobile.mainColumn]}
+                    : deepReadObject(row, props.mobile.mainColumn)}
                 </h3>
                 <p>
                   {typeof props.mobile.secondaryColumn === "function"
                     ? props.mobile.secondaryColumn(row)
-                    : row[props.mobile.secondaryColumn]}
+                    : deepReadObject(row, props.mobile.secondaryColumn)}
                 </p>
-                <p>{row[rotationColumn]}</p>
+                <p>{renderRotationColumn(row)}</p>
                 <FaChevronRight className="Table-mobileRowCTA" />
               </div>
             ))}
@@ -68,10 +91,10 @@ export default function Table(props: TableProps) {
           </div>
           <div className="Table-body">
             {props.data.map((row, index) => (
-              <div key={index} className="Table-row" onClick={props.onClickRow}>
+              <div key={index} className="Table-row" onClick={props.onClickRow?.bind(null, row)}>
                 {props.columns.map(({ id, render }) => (
                   <div key={id} className="Table-cell">
-                    {typeof render === "function" ? render(row) : row[id]}
+                    {typeof render === "function" ? render(row) : deepReadObject(row, id)}
                   </div>
                 ))}
               </div>

@@ -1,6 +1,6 @@
 import './App.scss';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 
 import Header from './components/Header/Header';
@@ -10,7 +10,9 @@ function App() {
   return (
     <RecoilRoot>
       <Header />
-      <VehiclesManagement />
+      <Suspense fallback="Loading...">
+        <VehiclesManagement />
+      </Suspense>
     </RecoilRoot>
   );
 }
