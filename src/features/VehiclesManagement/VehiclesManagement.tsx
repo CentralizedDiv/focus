@@ -29,11 +29,14 @@ export default function VehiclesManagement() {
   const setSearchQuery = useSetRecoilState($searchQuery);
   const { reset, ...methods } = useForm<Vehicle>();
 
-  console.log("rerender");
-
   useEffect(() => {
     if (currentVehicle) {
-      reset(currentVehicle);
+      reset({
+        ...currentVehicle,
+        sale: { ...currentVehicle.sale, date: formatTimestamp(Number(currentVehicle.sale?.date)) },
+      } as any);
+    } else {
+      reset({});
     }
   }, [currentVehicle, reset]);
 
@@ -92,6 +95,8 @@ export default function VehiclesManagement() {
       }, 200);
     }
   }, [isEditing, setIsCreating, setIsEditing, forceDrawer, setCurrentVehicle]);
+
+  console.log(currentVehicle);
 
   return (
     <div className="VehiclesManagement">

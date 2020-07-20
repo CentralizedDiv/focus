@@ -4,6 +4,7 @@
   &-addCostForm {
     margin-top: $s;
   }
+
   &-addCostFormButtons {
     display: flex;
     justify-content: flex-end;
@@ -21,7 +22,7 @@
     width: 100%;
   }
 
-  &-removeCost {
+  &-cost {
     display: flex;
     align-items: center;
 

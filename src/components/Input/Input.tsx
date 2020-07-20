@@ -16,17 +16,28 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
   error?: FieldError;
+  normalizer?: (value: string) => string;
   register?: ({ required }: { required?: Message | ValidationRule<boolean> }) => RefReturn;
 }
 
-export default function Input({ name, label, register, required, error, ...props }: InputProps) {
+export default function Input({ name, label, register, required, error, normalizer, ...props }: InputProps) {
   return (
     <label htmlFor={name} className={cn("Input", { "Input--error": error })}>
       <div className="Input-labelContainer">
         <span className="Input-label">{label}</span>{" "}
         {required && <span className="Input-labelRequired">Obrigatório</span>}
       </div>
-      <input name={name} id={name} ref={register?.({ required })} {...props} />
+      <input
+        name={name}
+        id={name}
+        ref={register?.({ required })}
+        onChange={(event) => {
+          if (typeof normalizer === "function") {
+            event.target.value = normalizer(event.target.value);
+          }
+        }}
+        {...props}
+      />
     </label>
   );
 }

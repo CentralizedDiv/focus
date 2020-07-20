@@ -3,14 +3,9 @@ import './Table.scss';
 import React, { useCallback, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 
+import { deepReadObject } from '../../utils/functions/utils';
 import useMediaQuery from '../../utils/hooks/useMediaQuery';
 import Select, { Option } from '../Select/Select';
-
-function deepReadObject(obj: any, deepKey: string) {
-  const keys = deepKey.split(".");
-  const deepValue = keys.reduce((currObj, currKey) => currObj[currKey], obj);
-  return deepValue;
-}
 
 export default function Table(props: TableProps) {
   const [rotationColumn, setRotationColumn] = useState(props.mobile.defaultRotationColumn);

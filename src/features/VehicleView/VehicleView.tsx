@@ -35,7 +35,7 @@ function Table(props: {
 
 export default function VehicleView(props: VehicleViewProps) {
   const totalCosts = useMemo(() => {
-    return Object.values(props.vehicle.costs).reduce((total, cost) => total + cost.value, 0);
+    return Object.values(props.vehicle.costs).reduce((total, cost) => total + Number(cost.value), 0);
   }, [props.vehicle.costs]);
   return (
     <div className="VehicleView">

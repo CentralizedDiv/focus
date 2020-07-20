@@ -6,6 +6,7 @@ export type Transaction = {
 export type Cost = {
   label: string;
   value: number;
+  undeleatable?: boolean;
 };
 export interface Vehicle {
   make: string;

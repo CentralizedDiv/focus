@@ -10,6 +10,7 @@ import Card from '../../components/Card/Card';
 import FormGroup from '../../components/FormGroup/FormGroup';
 import Input from '../../components/Input/Input';
 import { Vehicle } from '../../store/Vehicle/model';
+import { deepReadObject } from '../../utils/functions/utils';
 
 function AddCostForm(props: AddCostFormProps) {
   const { register, trigger, getValues, errors } = useForm<{ name: string; value: string }>();
@@ -89,6 +90,24 @@ export default function VehicleEdit(props: VehicleEditProps) {
             defaultValue={vehicle.licensePlate}
           />
         </FormGroup>
+        <FormGroup title="Venda">
+          <Input
+            name="sale.price"
+            label="Preço de Venda"
+            register={register}
+            required={true}
+            defaultValue={vehicle.sale?.price}
+            error={deepReadObject(errors, "sale.price")}
+          />
+          <Input
+            name="sale.date"
+            label="Data de Venda"
+            register={register}
+            required={true}
+            defaultValue={vehicle.sale?.date}
+            error={deepReadObject(errors, "sale.date")}
+          />
+        </FormGroup>
         <FormGroup title="Custos">
           {fields.map((cost, index) => {
             let _errors = errors.costs as Array<DeepMap<{ [key: string]: string }, FieldError>> | undefined;
@@ -97,18 +116,33 @@ export default function VehicleEdit(props: VehicleEditProps) {
               error = _errors?.[index]?.[cost.label];
             }
             return (
-              <div className="VehicleEdit-removeCost" key={cost.id}>
+              <div className="VehicleEdit-cost" key={cost.id}>
+                <input
+                  name={`costs[${index}].label`}
+                  type="hidden"
+                  ref={register()}
+                  defaultValue={fields[index].label}
+                />
+                <input
+                  name={`costs[${index}].undeleatable`}
+                  type="hidden"
+                  ref={register()}
+                  defaultValue={fields[index].undeleatable}
+                />
                 <Input
-                  name={`costs[${index}].${cost.label}`}
+                  name={`costs[${index}].value`}
+                  type="number"
                   label={cost.label}
-                  defaultValue={cost.value}
+                  defaultValue={fields[index].value}
                   register={register}
                   required={true}
                   error={error}
                 />
-                <Button inverse={true} onClick={() => remove(index)}>
-                  <FaTimes />
-                </Button>
+                {!cost.undeleatable && (
+                  <Button inverse={true} onClick={() => remove(index)}>
+                    <FaTimes />
+                  </Button>
+                )}
               </div>
             );
           })}
