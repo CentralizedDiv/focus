@@ -9,6 +9,7 @@ import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import FormGroup from '../../components/FormGroup/FormGroup';
 import Input from '../../components/Input/Input';
+import Photo from '../../components/Photo/Photo';
 import { Vehicle } from '../../store/Vehicle/model';
 import { deepReadObject } from '../../utils/functions/utils';
 
@@ -72,6 +73,7 @@ export default function VehicleEdit(props: VehicleEditProps) {
     <div className="VehicleEdit">
       <form>
         <FormGroup title="Identificação">
+          <Photo name="picture" label="Foto" register={register} defaultValue={vehicle.picture} />
           <Input
             name="make"
             label="Marca"
@@ -107,6 +109,33 @@ export default function VehicleEdit(props: VehicleEditProps) {
             defaultValue={vehicle.sale?.date}
             error={deepReadObject(errors, "sale.date")}
           />
+
+          <FormGroup title="Comprador">
+            <Input
+              name="sale.buyer.name"
+              label="Nome"
+              register={register}
+              required={true}
+              defaultValue={vehicle.sale?.buyer.name}
+              error={deepReadObject(errors, "sale.buyer.name")}
+            />
+            <Input
+              name="sale.buyer.phone"
+              label="Telefone"
+              register={register}
+              required={true}
+              defaultValue={vehicle.sale?.buyer.phone}
+              error={deepReadObject(errors, "sale.buyer.phone")}
+            />
+            <Input
+              name="sale.buyer.cpf"
+              label="CPF"
+              register={register}
+              required={true}
+              defaultValue={vehicle.sale?.buyer.cpf}
+              error={deepReadObject(errors, "sale.buyer.cpf")}
+            />
+          </FormGroup>
         </FormGroup>
         <FormGroup title="Custos">
           {fields.map((cost, index) => {

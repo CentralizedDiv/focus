@@ -12,7 +12,7 @@ type RefReturn =
   | null
   | undefined;
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
   error?: FieldError;

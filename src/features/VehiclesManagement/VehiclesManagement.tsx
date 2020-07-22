@@ -30,14 +30,17 @@ export default function VehiclesManagement() {
   const { reset, ...methods } = useForm<Vehicle>();
 
   useEffect(() => {
-    if (currentVehicle) {
-      reset({
-        ...currentVehicle,
-        sale: { ...currentVehicle.sale, date: formatTimestamp(Number(currentVehicle.sale?.date)) },
-      } as any);
-    } else {
-      reset({});
-    }
+    const callReset = async () => {
+      if (currentVehicle) {
+        reset({
+          ...currentVehicle,
+          sale: { ...currentVehicle.sale, date: formatTimestamp(Number(currentVehicle.sale?.date)) },
+        } as any);
+      } else {
+        reset({});
+      }
+    };
+    callReset();
   }, [currentVehicle, reset]);
 
   const columns = useMemo(
@@ -96,8 +99,6 @@ export default function VehiclesManagement() {
     }
   }, [isEditing, setIsCreating, setIsEditing, forceDrawer, setCurrentVehicle]);
 
-  console.log(currentVehicle);
-
   return (
     <div className="VehiclesManagement">
       <div className="VehiclesManagement-header">
@@ -138,6 +139,7 @@ export default function VehiclesManagement() {
               const valid = await methods.trigger();
               if (valid) {
                 const vehicle = methods.getValues();
+                console.log(vehicle);
                 setCurrentVehicle(vehicle);
                 setIsEditing(false);
                 setIsCreating(false);

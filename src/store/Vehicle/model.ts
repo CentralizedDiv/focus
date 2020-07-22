@@ -8,6 +8,11 @@ export type Cost = {
   value: number;
   undeleatable?: boolean;
 };
+export type Buyer = {
+  name: string;
+  phone: string;
+  cpf: string;
+};
 export interface Vehicle {
   make: string;
   model: string;
@@ -15,6 +20,7 @@ export interface Vehicle {
   licensePlate: string;
   docStatus: DocStatus;
   purchase: Transaction;
-  sale?: Transaction;
+  sale?: Transaction & { buyer: Buyer };
   costs: Cost[];
+  picture?: string;
 }

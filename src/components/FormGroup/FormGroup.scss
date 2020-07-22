@@ -21,5 +21,17 @@
     & + & {
       margin-top: $l;
     }
+
+    & > & {
+      margin: $m $s;
+      border-left: 1px solid;
+      padding: 0 $s 1px $s;
+    }
+
+    & > & > &Title {
+      display: inline;
+      padding: 0 4px 0 0;
+      border: none;
+    }
   }
 }
