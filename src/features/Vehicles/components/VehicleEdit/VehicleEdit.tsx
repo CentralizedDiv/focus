@@ -80,6 +80,10 @@ export default function VehicleEdit(props: VehicleEditProps) {
           ],
         },
         {
+          title: "Documentação",
+          fields: [{ name: "docStatus", label: "Estado da documentação", required: true }],
+        },
+        {
           title: "Venda",
           fields: [
             { name: "sale.price", label: "Preço de Venda" },
