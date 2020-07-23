@@ -1,0 +1,24 @@
+@import "../../../utils/styles/variables";
+
+.Select {
+  position: relative;
+
+  select {
+    margin: $xs 0 $s 0;
+    padding: $s;
+    width: 100%;
+    border-color: $default-border-color;
+    background-color: $color-white;
+    border-radius: $default-border-radius;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+  }
+
+  &-icon {
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 8px);
+  }
+}

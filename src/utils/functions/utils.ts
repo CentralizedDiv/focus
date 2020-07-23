@@ -1,5 +1,5 @@
-export function subtractDates(ts1: number, ts2: number) {
-  const diff = Math.abs(ts1 - ts2);
+export function subtractDates(d1: Date, d2: Date) {
+  const diff = Math.abs(d1.getTime() - d2.getTime());
   return diff / 86400000;
 }
 

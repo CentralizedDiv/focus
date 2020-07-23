@@ -3,8 +3,8 @@ import './App.scss';
 import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 
-import Header from './components/Header/Header';
-import VehiclesManagement from './features/VehiclesManagement/VehiclesManagement';
+import Header from './components/layout/Header/Header';
+import VehiclesManagement from './features/Vehicles/VehiclesManagement';
 
 function App() {
   return (
