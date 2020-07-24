@@ -18,7 +18,7 @@ export type Cost = {
 };
 
 export interface Vehicle {
-  id: string;
+  id?: string;
   make: string;
   model: string;
   year: string;
@@ -29,3 +29,16 @@ export interface Vehicle {
   costs: Cost[];
   picture?: string;
 }
+
+export const defaultVehicle = {
+  make: "",
+  model: "",
+  year: "",
+  licensePlate: "",
+  docStatus: "",
+  purchase: {
+    price: "",
+    date: "",
+  },
+  costs: [],
+};

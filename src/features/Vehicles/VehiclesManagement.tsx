@@ -2,7 +2,7 @@ import './VehiclesManagement.scss';
 
 import { saveVehicle } from 'api/Vehicle';
 import { Button, Drawer, Table } from 'components/shared';
-import { Vehicle } from 'entities/Vehicle/models';
+import { defaultVehicle, Vehicle } from 'entities/Vehicle/models';
 import {
     $currentVehicle, $forceDrawer, $isCreating, $isDrawerOpen, $isEditing, $searchQuery, useVehicles
 } from 'features/Vehicles/store';
@@ -23,20 +23,14 @@ export default function VehiclesManagement() {
   const [isCreating, setIsCreating] = useRecoilState($isCreating);
   const [isEditing, setIsEditing] = useRecoilState($isEditing);
   const setSearchQuery = useSetRecoilState($searchQuery);
-  const { reset, ...methods } = useForm<Vehicle>();
+  const { reset, ...methods } = useForm<Vehicle>({ defaultValues: defaultVehicle });
 
   useEffect(() => {
-    const callReset = async () => {
-      if (currentVehicle) {
-        reset({
-          ...currentVehicle,
-          sale: { ...currentVehicle.sale, date: formatDate(currentVehicle.sale?.date) },
-        } as any);
-      } else {
-        reset({ costs: [] });
-      }
-    };
-    callReset();
+    if (currentVehicle) {
+      reset(currentVehicle);
+    } else {
+      reset(defaultVehicle);
+    }
   }, [currentVehicle, reset]);
 
   const columns = useMemo(
