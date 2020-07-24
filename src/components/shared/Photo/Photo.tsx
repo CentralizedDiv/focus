@@ -2,15 +2,19 @@ import './Photo.scss';
 
 import Button from 'components/shared/Button/Button';
 import Input, { InputProps } from 'components/shared/Input/Input';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FaFileImage, FaSpinner } from 'react-icons/fa';
 
-export default function Photo({ register, ...props }: InputProps) {
+export default function Photo({ ...props }: InputProps) {
   const [isLoading, setIsLoading] = useState(false);
   const fileInput = useRef<HTMLInputElement | null>(null);
-  const { watch, setValue } = useFormContext();
-  const photo = watch(props.name);
+  const { getValues, setValue } = useFormContext();
+  const [photo, setPhoto] = useState<string | undefined>(getValues(props.name));
+
+  useEffect(() => {
+    setValue(props.name, photo);
+  }, [photo, props.name, setValue]);
 
   return (
     <label className="Photo" htmlFor={`${props.name}_file`}>
@@ -20,17 +24,17 @@ export default function Photo({ register, ...props }: InputProps) {
         onChange={(ev) => {
           const oldPhoto = photo;
           setIsLoading(true);
-          setValue(props.name, undefined);
+          setPhoto(undefined);
           if (ev.target.files) {
             const reader = new FileReader();
             reader.readAsDataURL(ev.target.files[0]);
             reader.onload = (ev) => {
               setIsLoading(false);
-              setValue(props.name, ev.target?.result);
+              setPhoto(ev.target?.result as string);
             };
           } else {
             setIsLoading(false);
-            setValue(props.name, oldPhoto);
+            setPhoto(oldPhoto);
           }
         }}
         disabled={isLoading}
@@ -55,7 +59,7 @@ export default function Photo({ register, ...props }: InputProps) {
       <Button
         inverse={true}
         onClick={() => {
-          setValue(props.name, undefined);
+          setPhoto(undefined);
           if (fileInput && fileInput.current) {
             fileInput.current.value = "";
           }

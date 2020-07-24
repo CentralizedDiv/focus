@@ -53,7 +53,7 @@ interface AddCostFormProps {
 }
 
 export default function VehicleEdit(props: VehicleEditProps) {
-  const [isAdding, setIsAdding] = useState(props.vehicle?.costs.length === 0 || !props.vehicle);
+  const [isAdding, setIsAdding] = useState(props.vehicle?.costs?.length === 0 || !props.vehicle);
 
   const { fields, append, remove } = useFieldArray({
     name: "costs",
@@ -114,7 +114,12 @@ export default function VehicleEdit(props: VehicleEditProps) {
                     }
                     return (
                       <div className="VehicleEdit-cost" key={cost.id}>
-                        <input name={`costs[${index}].label`} type="hidden" ref={register()} />
+                        <input
+                          name={`costs[${index}].label`}
+                          defaultValue={fields[index].label}
+                          type="hidden"
+                          ref={register()}
+                        />
                         <Input
                           name={`costs[${index}].value`}
                           type="number"

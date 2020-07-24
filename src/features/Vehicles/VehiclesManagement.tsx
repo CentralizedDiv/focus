@@ -1,10 +1,10 @@
 import './VehiclesManagement.scss';
 
+import { saveVehicle } from 'api/Vehicle';
 import { Button, Drawer, Table } from 'components/shared';
 import { Vehicle } from 'entities/Vehicle/models';
 import {
-    $currentVehicle, $filteredVehicleList, $forceDrawer, $isCreating, $isDrawerOpen, $isEditing,
-    $searchQuery
+    $currentVehicle, $forceDrawer, $isCreating, $isDrawerOpen, $isEditing, $searchQuery, useVehicles
 } from 'features/Vehicles/store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ import VehicleEdit from './components/VehicleEdit/VehicleEdit';
 import VehicleView, { VehicleViewHeader } from './components/VehicleView/VehicleView';
 
 export default function VehiclesManagement() {
-  const filteredVehicleList = useRecoilValue($filteredVehicleList);
+  const filteredVehicleList = useVehicles();
   const isDrawerOpen = useRecoilValue($isDrawerOpen);
   const [currentVehicle, setCurrentVehicle] = useRecoilState($currentVehicle);
   const forceDrawer = useSetRecoilState($forceDrawer);
@@ -33,7 +33,7 @@ export default function VehiclesManagement() {
           sale: { ...currentVehicle.sale, date: formatDate(currentVehicle.sale?.date) },
         } as any);
       } else {
-        reset({});
+        reset({ costs: [] });
       }
     };
     callReset();
@@ -141,6 +141,7 @@ export default function VehiclesManagement() {
               if (valid) {
                 const vehicle = methods.getValues();
                 console.log(vehicle);
+                saveVehicle(vehicle);
                 setCurrentVehicle(vehicle);
                 setIsEditing(false);
                 setIsCreating(false);

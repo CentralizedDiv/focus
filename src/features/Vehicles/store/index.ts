@@ -1,26 +1,36 @@
 import { Vehicle } from 'entities/Vehicle/models';
-import { atom, selector } from 'recoil';
+import { useEffect } from 'react';
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { getVehicleList } from '../../../api/Vehicle';
+import { useOnAll } from '@typesaurus/react';
 
-export const $vehicleList = selector<Vehicle[]>({
+import { getVehicleList, vehiclesCollection } from '../../../api/Vehicle';
+
+// Vehicles
+const vehiclesAtom = atom<Vehicle[] | undefined>({
+  key: "vehiclesAtom",
+  default: undefined,
+});
+
+const $vehicles = selector<Vehicle[]>({
   key: "vehicleList",
-  get: async () => {
-    const response = await getVehicleList();
-    return response;
+  get: async ({ get }) => {
+    let vehicles = get(vehiclesAtom);
+    if (!vehicles) {
+      vehicles = await getVehicleList();
+    }
+    return vehicles;
+  },
+  set: ({ set }, newValue) => {
+    set(vehiclesAtom, newValue);
   },
 });
 
-export const $searchQuery = atom<string>({
-  key: "searchQuery",
-  default: "",
-});
-
-export const $filteredVehicleList = selector<Vehicle[]>({
+const $filteredVehicleList = selector<Vehicle[]>({
   key: "filteredVehicleList",
-  get: ({ get }) => {
+  get: async ({ get }) => {
     const searchQuery = get($searchQuery);
-    const vehicleList = get($vehicleList);
+    const vehicleList = get($vehicles);
     return vehicleList.filter(
       (v) =>
         v.model.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1 ||
@@ -29,6 +39,26 @@ export const $filteredVehicleList = selector<Vehicle[]>({
   },
 });
 
+export const $searchQuery = atom<string>({
+  key: "searchQuery",
+  default: "",
+});
+
+export const useVehicles = () => {
+  const vehiclesDocs = useOnAll(vehiclesCollection);
+  const filteredVehicleList = useRecoilValue($filteredVehicleList);
+  const setVehicleList = useSetRecoilState($vehicles);
+
+  useEffect(() => {
+    if (vehiclesDocs) {
+      setVehicleList(vehiclesDocs.map((v) => ({ ...v.data, id: v.ref.id })));
+    }
+  }, [vehiclesDocs, setVehicleList]);
+
+  return filteredVehicleList;
+};
+
+// UI
 export const $currentVehicle = atom<null | Vehicle>({
   key: "currentVehicle",
   default: null,
