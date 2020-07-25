@@ -19,7 +19,8 @@ input {
   }
 }
 
-body {
+body,
+.Loading {
   max-width: calc(1440px - 8px);
   margin: $s;
 
