@@ -1,6 +1,9 @@
 @import "../../../../utils/styles/variables";
 
 .VehicleView {
+  display: flex;
+  flex-direction: column;
+
   &-tags {
     display: flex;
     align-items: center;
@@ -71,5 +74,12 @@
         }
       }
     }
+  }
+
+  &-image {
+    max-width: 100%;
+    border-radius: $default-border-radius;
+    margin: $s 0;
+    align-self: center;
   }
 }

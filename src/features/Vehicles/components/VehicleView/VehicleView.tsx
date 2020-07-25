@@ -4,8 +4,10 @@ import cn from 'classnames';
 import { Button, Card, Tag } from 'components/shared';
 import { Vehicle } from 'entities/Vehicle/models';
 import React, { useMemo } from 'react';
-import { FaCheck, FaEdit, FaTimes } from 'react-icons/fa';
-import { formatCurrency, formatDate, formatLicensePlate } from 'utils/functions/formatters';
+import { FaCheck, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
+import {
+    createDate, formatCurrency, formatDate, formatLicensePlate
+} from 'utils/functions/formatters';
 import { subtractDates } from 'utils/functions/utils';
 
 function Table(props: {
@@ -30,21 +32,26 @@ function Table(props: {
 
 export default function VehicleView(props: VehicleViewProps) {
   const totalCosts = useMemo(() => {
-    return Object.values(props.vehicle.costs).reduce((total, cost) => total + Number(cost.value), 0);
-  }, [props.vehicle.costs]);
+    return Object.values(props.vehicle.costs).reduce(
+      (total, cost) => total + Number(cost.value),
+      Number(props.vehicle.purchase.price)
+    );
+  }, [props.vehicle.costs, props.vehicle.purchase.price]);
+
   return (
     <div className="VehicleView">
       <div className="VehicleView-tags">
-        {props.vehicle.sale ? (
+        {props.vehicle.sale?.date && props.vehicle.sale?.price ? (
           <>
             <Tag type="success">VENDIDO - {formatDate(props.vehicle.sale.date)}</Tag>
             <Tag type="success">LUCRO LIQUÍDO: {formatCurrency(Number(props.vehicle.sale.price) - totalCosts)}</Tag>
           </>
         ) : (
-          <Tag type="danger">{subtractDates(new Date(), new Date(props.vehicle.purchase.date))} DIAS EM ESTOQUE</Tag>
+          <Tag type="warning">{subtractDates(new Date(), createDate(props.vehicle.purchase.date))} DIAS EM ESTOQUE</Tag>
         )}
         <Tag type="success">DOCUMENTAÇÃO: {props.vehicle.docStatus}</Tag>
       </div>
+      {props.vehicle.picture && <img className="VehicleView-image" src={props.vehicle.picture} alt="Foto do Carro" />}
       <Table
         title="Identificação"
         result={false}
@@ -65,21 +72,27 @@ export default function VehicleView(props: VehicleViewProps) {
             label: "Placa",
             value: formatLicensePlate(props.vehicle.licensePlate),
           },
+          {
+            label: "Data da Compra",
+            value: props.vehicle.purchase.date,
+          },
         ]}
       />
       <Table
         title="Custos"
         result={true}
-        rows={Object.values(props.vehicle.costs)
-          .map<{ label: string; value: string | number; result?: boolean }>(({ label, value }) => ({
-            label,
-            value: formatCurrency(value),
-          }))
-          .concat({
-            label: "Total",
-            value: formatCurrency(totalCosts),
-            result: true,
-          })}
+        rows={[{ label: "Valor da Compra", value: formatCurrency(props.vehicle.purchase.price) } as any].concat([
+          ...Object.values(props.vehicle.costs)
+            .map<{ label: string; value: string | number; result?: boolean }>(({ label, value }) => ({
+              label,
+              value: formatCurrency(value),
+            }))
+            .concat({
+              label: "Total",
+              value: formatCurrency(totalCosts),
+              result: true,
+            }),
+        ])}
       />
     </div>
   );
@@ -100,9 +113,12 @@ export function VehicleViewHeader(props: VehicleViewHeaderProps) {
             </Button>
           </>
         ) : (
-          <Button onClick={props.onEdit} icon={<FaEdit />} inverse={true}>
-            Editar
-          </Button>
+          <>
+            <Button onClick={props.onEdit} icon={<FaEdit />} inverse={true}>
+              Editar
+            </Button>
+            <Button onClick={props.onDelete} icon={<FaTrash />} />
+          </>
         )}
       </div>
     </div>
@@ -111,6 +127,7 @@ export function VehicleViewHeader(props: VehicleViewHeaderProps) {
 
 export interface VehicleViewHeaderProps {
   onEdit: () => void;
+  onDelete: () => void;
   onSave: () => void;
   onCancel: () => void;
   enableSaveButton: boolean;

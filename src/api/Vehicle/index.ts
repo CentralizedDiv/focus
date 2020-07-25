@@ -1,6 +1,6 @@
 import { Vehicle } from 'entities/Vehicle/models';
 import { storage } from 'firebase-config';
-import { add, all, collection, update } from 'typesaurus';
+import { add, all, collection, remove, update } from 'typesaurus';
 
 export const vehiclesCollection = collection<Vehicle>("vehicles");
 
@@ -20,5 +20,11 @@ export async function saveVehicle(vehicle: Vehicle) {
     return update(vehiclesCollection, vehicle.id, { ...vehicle, picture });
   } else {
     return add(vehiclesCollection, { ...vehicle, picture });
+  }
+}
+
+export function deleteVehicle(vehicle: Vehicle) {
+  if (vehicle.id) {
+    return remove(vehiclesCollection, vehicle.id);
   }
 }

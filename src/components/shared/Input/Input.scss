@@ -6,6 +6,7 @@
   }
 
   &-labelRequired {
+    margin: 0 4px;
     font-style: italic;
     color: rgba(84, 106, 123, 0.6);
     font-size: 12px;
@@ -16,7 +17,7 @@
     border-color: #f58c8c;
   }
 
-  &--error &-labelRequired {
+  &--error &-labelRequired:last-child {
     color: #f58c8c;
   }
 }

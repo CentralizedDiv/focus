@@ -1,6 +1,6 @@
 import './VehiclesManagement.scss';
 
-import { saveVehicle } from 'api/Vehicle';
+import { deleteVehicle, saveVehicle } from 'api/Vehicle';
 import { Button, Drawer, Table } from 'components/shared';
 import { defaultVehicle, Vehicle } from 'entities/Vehicle/models';
 import {
@@ -134,7 +134,6 @@ export default function VehiclesManagement() {
               const valid = await methods.trigger();
               if (valid) {
                 const vehicle = methods.getValues();
-                console.log(vehicle);
                 saveVehicle(vehicle);
                 setCurrentVehicle(vehicle);
                 setIsEditing(false);
@@ -143,6 +142,12 @@ export default function VehiclesManagement() {
             }}
             onEdit={() => {
               setIsEditing(true);
+            }}
+            onDelete={() => {
+              resetState();
+              if (currentVehicle) {
+                deleteVehicle(currentVehicle);
+              }
             }}
             onCancel={() => {
               handleDrawerClose();

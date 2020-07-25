@@ -68,15 +68,21 @@ export default function VehicleEdit(props: VehicleEditProps) {
             { type: "photo", name: "picture", label: "Foto" },
             { name: "make", label: "Marca", required: true },
             { name: "model", label: "Modelo", required: true },
-            { name: "year", label: "Ano", required: true },
-            { name: "licensePlate", label: "Placa", required: true },
+            { name: "year", label: "Ano", required: true, validation: "year", type: "number" },
+            { name: "licensePlate", label: "Placa", required: true, validation: "licensePlate" },
           ],
         },
         {
           title: "Compra",
           fields: [
-            { name: "purchase.price", label: "Valor de Compra", required: true },
-            { name: "purchase.date", label: "Data da Compra", required: true },
+            {
+              name: "purchase.price",
+              label: "Valor de Compra",
+              required: true,
+              validation: "currency",
+              type: "number",
+            },
+            { name: "purchase.date", label: "Data da Compra", required: true, validation: "date" },
           ],
         },
         {
@@ -86,8 +92,8 @@ export default function VehicleEdit(props: VehicleEditProps) {
         {
           title: "Venda",
           fields: [
-            { name: "sale.price", label: "Preço de Venda" },
-            { name: "sale.date", label: "Data da Venda" },
+            { name: "sale.price", label: "Preço de Venda", validation: "currency", type: "number" },
+            { name: "sale.date", label: "Data da Venda", validation: "date" },
             {
               title: "Comprador",
               fields: [

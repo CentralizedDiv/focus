@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { deepReadObject } from 'utils/functions/utils';
 
 import FormGroupComponent from '../FormGroup/FormGroup';
-import Input from '../Input/Input';
+import Input, { Validation } from '../Input/Input';
 import Photo from '../Photo/Photo';
 
-export default function Form({ groups, ...props }: FormProps) {
+export default function Form({ groups }: FormProps) {
   const { register, errors } = useFormContext();
 
   const renderField = useCallback(
     (fieldOrGroup: Field | FormGroup | Custom, key: number) => {
-      const field = { type: "input", ...fieldOrGroup } as Field;
+      const field = { type: "text", ...fieldOrGroup } as Field;
       const group = fieldOrGroup as FormGroup;
       const custom = fieldOrGroup as Custom;
       if (group.title) {
@@ -20,9 +21,9 @@ export default function Form({ groups, ...props }: FormProps) {
           </FormGroupComponent>
         );
       } else if (field.type === "photo") {
-        return <Photo key={key} register={register} {...field} error={errors[field.name]} />;
-      } else if (field.type === "input") {
-        return <Input key={key} register={register} {...field} error={errors[field.name]} />;
+        return <Photo key={key} register={register} {...field} error={deepReadObject(errors, field.name)} />;
+      } else if (field.type === "text" || field.type === "number") {
+        return <Input key={key} register={register} {...field} error={deepReadObject(errors, field.name)} />;
       } else if (custom.render) {
         return <div key={key}>{custom.render(register, errors)}</div>;
       }
@@ -41,12 +42,13 @@ export default function Form({ groups, ...props }: FormProps) {
   );
 }
 
-export type FieldType = "input" | "photo" | "custom";
+export type FieldType = "text" | "number" | "photo" | "custom";
 export interface Field {
   type?: FieldType;
   name: string;
   label: string;
   required?: boolean;
+  validation?: Validation;
 }
 
 export interface Custom {
