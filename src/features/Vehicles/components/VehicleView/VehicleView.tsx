@@ -92,6 +92,31 @@ export default function VehicleView(props: VehicleViewProps) {
           },
         ]}
       />
+      {props.vehicle.sale?.price && props.vehicle.sale?.date && (
+        <Table
+          title="Venda"
+          result={true}
+          rows={[
+            {
+              label: "Data da Venda",
+              value: props.vehicle.sale.date,
+            },
+            {
+              label: "Preço da Venda",
+              value: props.vehicle.sale.price,
+            },
+            {
+              label: "Nome do Comprador",
+              value: props.vehicle.sale.buyer?.name as string,
+            },
+            {
+              label: "Lucro Líquido",
+              result: true,
+              value: formatCurrency(Number(props.vehicle.sale.price) - totalCosts),
+            },
+          ]}
+        />
+      )}
       <Table
         title="Custos"
         result={true}
