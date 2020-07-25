@@ -103,7 +103,7 @@ export default function VehicleView(props: VehicleViewProps) {
             },
             {
               label: "Preço da Venda",
-              value: props.vehicle.sale.price,
+              value: formatCurrency(props.vehicle.sale.price),
             },
             {
               label: "Nome do Comprador",

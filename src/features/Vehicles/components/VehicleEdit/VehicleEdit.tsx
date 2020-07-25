@@ -20,7 +20,7 @@ function AddCostForm(props: AddCostFormProps) {
                 title: "Novo Custo",
                 fields: [
                   { name: "label", label: "Custo", required: true },
-                  { name: "value", label: "Valor", required: true },
+                  { name: "value", label: "Valor", required: true, validation: "currency", type: "number" },
                 ],
               },
             ]}
