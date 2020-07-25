@@ -3,7 +3,7 @@ import './VehicleView.scss';
 import cn from 'classnames';
 import { Button, Card, Tag } from 'components/shared';
 import { Vehicle } from 'entities/Vehicle/models';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FaCheck, FaEdit, FaTimes, FaTrash } from 'react-icons/fa';
 import {
     createDate, formatCurrency, formatDate, formatLicensePlate
@@ -31,6 +31,8 @@ function Table(props: {
 }
 
 export default function VehicleView(props: VehicleViewProps) {
+  const [loadingImage, setLoadingImage] = useState(true);
+
   const totalCosts = useMemo(() => {
     return Object.values(props.vehicle.costs).reduce(
       (total, cost) => total + Number(cost.value),
@@ -51,7 +53,19 @@ export default function VehicleView(props: VehicleViewProps) {
         )}
         <Tag type="success">DOCUMENTAÇÃO: {props.vehicle.docStatus}</Tag>
       </div>
-      {props.vehicle.picture && <img className="VehicleView-image" src={props.vehicle.picture} alt="Foto do Carro" />}
+      {props.vehicle.picture && (
+        <div className="VehicleView-imageContainer" style={{ backgroundImage: `url(${props.vehicle.picture})` }}>
+          {loadingImage && <span className="VehicleView-imageLoading">Carregando imagem...</span>}
+          <img
+            className="VehicleView-image"
+            onLoad={() => {
+              setLoadingImage(false);
+            }}
+            src={props.vehicle.picture}
+            alt="Foto do Carro"
+          />
+        </div>
+      )}
       <Table
         title="Identificação"
         result={false}
