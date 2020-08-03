@@ -1,19 +1,25 @@
 import './VehiclesManagement.scss';
 
-import { deleteVehicle, saveVehicle } from 'api/Vehicle';
-import { Button, Drawer, Table } from 'components/shared';
-import { defaultVehicle, Vehicle } from 'entities/Vehicle/models';
 import {
-    $currentVehicle, $forceDrawer, $isCreating, $isDrawerOpen, $isEditing, $searchQuery, useVehicles
+  $currentVehicle,
+  $forceDrawer,
+  $isCreating,
+  $isDrawerOpen,
+  $isEditing,
+  $searchQuery,
+  useVehicles,
 } from 'features/Vehicles/store';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, Drawer, Table } from 'components/shared';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FaChevronRight } from 'react-icons/fa';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { formatCurrency, formatDate, formatLicensePlate } from 'utils/functions/formatters';
-
-import VehicleEdit from './components/VehicleEdit/VehicleEdit';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Vehicle, defaultVehicle } from 'entities/Vehicle/models';
 import VehicleView, { VehicleViewHeader } from './components/VehicleView/VehicleView';
+import { deleteVehicle, saveVehicle } from 'api/Vehicle';
+import { formatCurrency, formatDate, formatLicensePlate } from 'utils/functions/formatters';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import { FaChevronRight } from 'react-icons/fa';
+import VehicleEdit from './components/VehicleEdit/VehicleEdit';
 
 export default function VehiclesManagement() {
   const filteredVehicleList = useVehicles();
@@ -35,33 +41,33 @@ export default function VehiclesManagement() {
 
   const columns = useMemo(
     () => [
-      { id: "make", label: "Marca" },
-      { id: "model", label: "Modelo" },
-      { id: "year", label: "Ano" },
+      { id: 'make', label: 'Marca', sort: true },
+      { id: 'model', label: 'Modelo' },
+      { id: 'year', label: 'Ano' },
       {
-        id: "licensePlate",
-        label: "Placa",
+        id: 'licensePlate',
+        label: 'Placa',
         render: (v: Vehicle) => {
           return <span>{formatLicensePlate(v.licensePlate)}</span>;
         },
       },
       {
-        id: "purchase.price",
-        label: "Preço de Compra",
+        id: 'purchase.price',
+        label: 'Preço de Compra',
         render: (row: Vehicle) => {
           return <span>{formatCurrency(row.purchase.price)}</span>;
         },
       },
       {
-        id: "purchase.date",
-        label: "Data de Compra",
+        id: 'purchase.date',
+        label: 'Data de Compra',
         render: (v: Vehicle) => {
           return <span>{formatDate(v?.purchase.date)}</span>;
         },
       },
       {
-        id: "actions",
-        label: "",
+        id: 'actions',
+        label: '',
         render: (v: Vehicle) => (
           <Button
             onClick={() => {
@@ -106,23 +112,24 @@ export default function VehiclesManagement() {
           Adicionar Veículo
         </Button>
         <label htmlFor="search">
-          Pesquisar
-          <input id="search" placeholder="Celta 2010" onChange={(ev) => setSearchQuery(ev.target.value)} />
+          Pesquisar (Marca, Modelo ou Placa)
+          <input id="search" onChange={(ev) => setSearchQuery(ev.target.value)} />
         </label>
       </div>
       <Table
         columns={columns}
         data={filteredVehicleList}
+        defaultSort="make_up"
         mobile={{
-          rotationLabel: "Comparar",
+          rotationLabel: 'Comparar',
           mainColumn: (row: any) => (
             <span>
               {row.make} {row.model}
             </span>
           ),
-          secondaryColumn: "year",
-          defaultRotationColumn: "purchase.price",
-          hiddenColumns: ["make", "model", "actions"],
+          secondaryColumn: 'year',
+          defaultRotationColumn: 'purchase.price',
+          hiddenColumns: ['make', 'model', 'actions'],
           onClickRow: (row: Vehicle) => setCurrentVehicle(row),
         }}
       />
@@ -153,7 +160,9 @@ export default function VehiclesManagement() {
               handleDrawerClose();
             }}
             enableSaveButton={isEditing || isCreating}
-            label={isEditing ? "Editar Veículo" : isCreating ? "Cadastrar Veículo" : "Visualizar Veículo"}
+            label={
+              isEditing ? 'Editar Veículo' : isCreating ? 'Cadastrar Veículo' : 'Visualizar Veículo'
+            }
           />
         }
         onClose={() => {

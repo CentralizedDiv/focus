@@ -1,20 +1,43 @@
 import './Table.scss';
 
+import { FaChevronDown, FaChevronRight, FaChevronUp } from 'react-icons/fa';
+import React, { useCallback, useEffect, useState } from 'react';
 import Select, { Option } from 'components/shared/Select/Select';
-import React, { useCallback, useState } from 'react';
-import { FaChevronRight } from 'react-icons/fa';
+
+import cn from 'classnames';
 import { deepReadObject } from 'utils/functions/utils';
 import useMediaQuery from 'utils/hooks/useMediaQuery';
 
 export default function Table(props: TableProps) {
   const [rotationColumn, setRotationColumn] = useState(props.mobile.defaultRotationColumn);
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const [activeSort, setActiveSort] = useState<string | undefined>(props.defaultSort);
+  const [sortedData, setSortedData] = useState(props.data);
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
-  const findColumn = useCallback((id: string) => props.columns.find((col) => col.id === id), [props.columns]);
+  useEffect(() => {
+    if (activeSort) {
+      const [id, direction] = activeSort.split('_');
+      const sort = (a: { [key: string]: string }, b: { [key: string]: string }) => {
+        const order = a[id].localeCompare(b[id]);
+        if (direction === 'down') {
+          return order * -1;
+        } else {
+          return order;
+        }
+      };
+      setSortedData([...props.data].sort(sort));
+    } else {
+      setSortedData([...props.data]);
+    }
+  }, [activeSort, props.data]);
+
+  const findColumn = useCallback((id: string) => props.columns.find((col) => col.id === id), [
+    props.columns,
+  ]);
   const renderRotationColumn = useCallback(
     (row) => {
       const col = findColumn(rotationColumn);
-      if (typeof col?.render === "function") {
+      if (typeof col?.render === 'function') {
         return col.render(row);
       } else {
         return deepReadObject(row, rotationColumn);
@@ -55,15 +78,17 @@ export default function Table(props: TableProps) {
               <div
                 key={index}
                 className="Table-mobileRow"
-                onClick={props.mobile.onClickRow?.bind(null, row) || props.onClickRow?.bind(null, row)}
+                onClick={
+                  props.mobile.onClickRow?.bind(null, row) || props.onClickRow?.bind(null, row)
+                }
               >
                 <h3>
-                  {typeof props.mobile.mainColumn === "function"
+                  {typeof props.mobile.mainColumn === 'function'
                     ? props.mobile.mainColumn(row)
                     : deepReadObject(row, props.mobile.mainColumn)}
                 </h3>
                 <p>
-                  {typeof props.mobile.secondaryColumn === "function"
+                  {typeof props.mobile.secondaryColumn === 'function'
                     ? props.mobile.secondaryColumn(row)
                     : deepReadObject(row, props.mobile.secondaryColumn)}
                 </p>
@@ -77,18 +102,49 @@ export default function Table(props: TableProps) {
       {!isMobile && (
         <>
           <div className="Table-header">
-            {props.columns.map(({ id, label }) => (
+            {props.columns.map(({ id, label, sort }) => (
               <div key={id} className="Table-headerCell">
                 {label}
+                {sort && (
+                  <div
+                    className="Table-headerSort"
+                    onClick={() => {
+                      if (activeSort && activeSort.includes(id)) {
+                        if (activeSort.includes('_up')) {
+                          setActiveSort(id + '_down');
+                        } else {
+                          setActiveSort(props.defaultSort);
+                        }
+                      } else {
+                        setActiveSort(id + '_up');
+                      }
+                    }}
+                  >
+                    <FaChevronDown className={cn({ isActive: activeSort === id + '_down' })} />
+                    <FaChevronUp className={cn({ isActive: activeSort === id + '_up' })} />
+                  </div>
+                )}
+                {/* {sort && (
+                  <div className="Table-headerSort">
+                    {activeSort === id + '_custom' ? (
+                      <FaTimes
+                        className="isActive"
+                        onClick={() => setActiveSort(props.defaultSort)}
+                      />
+                    ) : (
+                      <FaFilter onClick={() => setActiveSort(id + '_custom')} />
+                    )}
+                  </div>
+                )} */}
               </div>
             ))}
           </div>
           <div className="Table-body">
-            {props.data.map((row, index) => (
+            {sortedData.map((row, index) => (
               <div key={index} className="Table-row" onClick={props.onClickRow?.bind(null, row)}>
                 {props.columns.map(({ id, render }) => (
                   <div key={id} className="Table-cell">
-                    {typeof render === "function" ? render(row) : deepReadObject(row, id)}
+                    {typeof render === 'function' ? render(row) : deepReadObject(row, id)}
                   </div>
                 ))}
               </div>
@@ -104,6 +160,7 @@ export interface TableColumn {
   id: string;
   label: string;
   render?: (row: any) => JSX.Element;
+  sort?: boolean;
 }
 
 export interface TableMobileOptions {
@@ -118,6 +175,7 @@ export interface TableMobileOptions {
 export interface TableProps {
   columns: TableColumn[];
   data: any[];
+  defaultSort?: string;
   mobile: TableMobileOptions;
   onClickRow?: (...args: any) => void;
 }

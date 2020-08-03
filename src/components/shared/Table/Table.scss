@@ -1,4 +1,4 @@
-@import "../../../utils/styles/variables";
+@import '../../../utils/styles/variables';
 
 .Table {
   &-header {
@@ -12,7 +12,24 @@
 
     &Cell {
       flex: 1;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &Sort {
+      display: flex;
+      flex-direction: column-reverse;
+      margin-left: $s;
+
+      & > svg {
+        cursor: pointer;
+        opacity: 0.5;
+
+        &.isActive {
+          opacity: 1;
+        }
+      }
     }
   }
 

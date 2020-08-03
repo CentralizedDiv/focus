@@ -1,19 +1,18 @@
+import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getVehicleList, vehiclesCollection } from '../../../api/Vehicle';
+
 import { Vehicle } from 'entities/Vehicle/models';
 import { useEffect } from 'react';
-import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
-
 import { useOnAll } from '@typesaurus/react';
-
-import { getVehicleList, vehiclesCollection } from '../../../api/Vehicle';
 
 // Vehicles
 const vehiclesAtom = atom<Vehicle[] | undefined>({
-  key: "vehiclesAtom",
+  key: 'vehiclesAtom',
   default: undefined,
 });
 
 const $vehicles = selector<Vehicle[]>({
-  key: "vehicleList",
+  key: 'vehicleList',
   get: async ({ get }) => {
     let vehicles = get(vehiclesAtom);
     if (!vehicles) {
@@ -27,12 +26,13 @@ const $vehicles = selector<Vehicle[]>({
 });
 
 const $filteredVehicleList = selector<Vehicle[]>({
-  key: "filteredVehicleList",
+  key: 'filteredVehicleList',
   get: async ({ get }) => {
     const searchQuery = get($searchQuery);
     const vehicleList = get($vehicles);
     return vehicleList.filter(
       (v) =>
+        v.make.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1 ||
         v.model.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1 ||
         v.licensePlate.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1
     );
@@ -40,8 +40,8 @@ const $filteredVehicleList = selector<Vehicle[]>({
 });
 
 export const $searchQuery = atom<string>({
-  key: "searchQuery",
-  default: "",
+  key: 'searchQuery',
+  default: '',
 });
 
 export const useVehicles = () => {
@@ -55,32 +55,40 @@ export const useVehicles = () => {
     }
   }, [vehiclesDocs, setVehicleList]);
 
-  return filteredVehicleList;
+  const sortVehicles = (a: Vehicle, b: Vehicle) => {
+    if (a.make === b.make) {
+      return a.model.localeCompare(b.model);
+    } else {
+      return a.make.localeCompare(b.make);
+    }
+  };
+
+  return [...filteredVehicleList].sort(sortVehicles);
 };
 
 // UI
 export const $currentVehicle = atom<null | Vehicle>({
-  key: "currentVehicle",
+  key: 'currentVehicle',
   default: null,
 });
 
 export const $isCreating = atom<boolean>({
-  key: "isCreating",
+  key: 'isCreating',
   default: false,
 });
 
 export const $isEditing = atom<boolean>({
-  key: "isEditing",
+  key: 'isEditing',
   default: false,
 });
 
 export const $forceDrawer = atom<boolean | undefined>({
-  key: "forceDrawer",
+  key: 'forceDrawer',
   default: undefined,
 });
 
 export const $isDrawerOpen = selector<boolean>({
-  key: "isDrawerOpen",
+  key: 'isDrawerOpen',
   get: ({ get }) => {
     const forceDrawer = get($forceDrawer);
     if (forceDrawer !== undefined) {
