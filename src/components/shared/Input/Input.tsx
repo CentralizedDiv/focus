@@ -30,12 +30,12 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function Input({ validation, name, label, register, required, error, ...props }: InputProps) {
   const patterns = {
     year: {
-      value: /^\d{4}$/,
-      message: "Ano Inválido (Ex.: 2020)",
+      value: /^\d{4}([-]\d{4})?$/,
+      message: "Ano Inválido (Ex.: 2020 ou 2019-2020)",
     },
     licensePlate: {
-      value: /^[a-zA-Z]{3}[-]?\d{4}$/,
-      message: "Placa Inválida (Ex.: ABC-1234)",
+      value: /^[a-zA-Z0-9-]*$/,
+      message: "Placa Inválida (Ex.: ABC-1234 ou ABC1A123 ou ABC1234)",
     },
     currency: {
       value: /^[0-9]*$/,

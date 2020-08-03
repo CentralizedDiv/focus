@@ -68,7 +68,7 @@ export default function VehicleEdit(props: VehicleEditProps) {
             { type: "photo", name: "picture", label: "Foto" },
             { name: "make", label: "Marca", required: true },
             { name: "model", label: "Modelo", required: true },
-            { name: "year", label: "Ano", required: true, validation: "year", type: "number" },
+            { name: "year", label: "Ano", required: true, validation: "year" },
             { name: "licensePlate", label: "Placa", required: true, validation: "licensePlate" },
           ],
         },
