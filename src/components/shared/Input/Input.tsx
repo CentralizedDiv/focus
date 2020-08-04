@@ -1,9 +1,9 @@
 import './Input.scss';
 
-import cn from 'classnames';
 import React, { InputHTMLAttributes } from 'react';
-import { FieldError } from 'react-hook-form';
 import { ValidationRule, ValidationValueMessage } from 'react-hook-form/dist/types/form';
+import { FieldError } from 'react-hook-form';
+import cn from 'classnames';
 
 type RefReturn =
   | string
@@ -18,6 +18,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: FieldError;
   validation?: Validation;
+  icon?: React.ReactNode;
   register?: ({
     required,
     pattern,
@@ -34,6 +35,7 @@ export default function Input({
   register,
   required,
   error,
+  icon,
   ...props
 }: InputProps) {
   const patterns = {
@@ -57,13 +59,17 @@ export default function Input({
   const rule = validation ? patterns[validation] : undefined;
 
   return (
-    <label htmlFor={name} className={cn('Input', { 'Input--error': error })}>
+    <label
+      htmlFor={name}
+      className={cn('Input', { 'Input--error': error, 'Input--withIcon': icon })}
+    >
       <div className="Input-labelContainer">
         <span className="Input-label">{label}</span>
         {required && <span className="Input-labelRequired">Obrigatório</span>}
         {error && error.message && <span className="Input-labelRequired">{error.message}</span>}
       </div>
       <input name={name} id={name} ref={register?.({ required, pattern: rule })} {...props} />
+      {icon && <span className="Input-icon">{icon}</span>}
     </label>
   );
 }

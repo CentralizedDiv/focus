@@ -1,8 +1,21 @@
-@import "../../../utils/styles/variables";
+@import '../../../utils/styles/variables';
 
 .Input {
   > input {
     transition: border-color 0.2s ease-in-out;
+  }
+
+  &--withIcon {
+    position: relative;
+    > input {
+      padding-left: 30px;
+    }
+  }
+
+  &--withIcon &-icon {
+    position: absolute;
+    bottom: 7px;
+    left: 8px;
   }
 
   &-labelRequired {

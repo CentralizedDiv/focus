@@ -9,7 +9,7 @@ import {
   $searchQuery,
   useVehicles,
 } from 'features/Vehicles/store';
-import { Button, Drawer, Table } from 'components/shared';
+import { Button, Drawer, Table, Input } from 'components/shared';
 import { FormProvider, useForm } from 'react-hook-form';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Vehicle, defaultVehicle } from 'entities/Vehicle/models';
@@ -18,7 +18,7 @@ import { deleteVehicle, saveVehicle } from 'api/Vehicle';
 import { formatCurrency, formatDate, formatLicensePlate } from 'utils/functions/formatters';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaSearch } from 'react-icons/fa';
 import VehicleEdit from './components/VehicleEdit/VehicleEdit';
 
 export default function VehiclesManagement() {
@@ -111,10 +111,13 @@ export default function VehiclesManagement() {
         >
           Adicionar Veículo
         </Button>
-        <label htmlFor="search">
-          Pesquisar (Marca, Modelo ou Placa)
-          <input id="search" onChange={(ev) => setSearchQuery(ev.target.value)} />
-        </label>
+        <Input
+          name="search"
+          label="Pesquisar (Marca, Modelo ou Placa)"
+          icon={<FaSearch />}
+          id="search"
+          onChange={(ev) => setSearchQuery(ev.target.value)}
+        />
       </div>
       <Table
         columns={columns}
