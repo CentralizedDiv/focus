@@ -4,7 +4,7 @@ import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 
 import Header from './components/layout/Header/Header';
-import VehiclesManagement from './features/Vehicles/VehiclesManagement';
+import Dashboard from './features/Dashboard/Dashboard';
 
 function Loading() {
   return <div className="Loading">Carregando...</div>;
@@ -15,7 +15,7 @@ function App() {
     <RecoilRoot>
       <Header />
       <Suspense fallback={<Loading />}>
-        <VehiclesManagement />
+        <Dashboard />
       </Suspense>
     </RecoilRoot>
   );

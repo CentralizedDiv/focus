@@ -6,14 +6,14 @@ import 'firebase/storage';
 import * as firebase from 'firebase/app';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDPUrgV-AXd6UsZNcRZ5-C4lHJK8awmwpM',
-  authDomain: 'bh-automoveis-f0392.firebaseapp.com',
-  databaseURL: 'https://bh-automoveis-f0392.firebaseio.com',
-  projectId: 'bh-automoveis-f0392',
-  storageBucket: 'bh-automoveis-f0392.appspot.com',
-  messagingSenderId: '838908412779',
-  appId: '1:838908412779:web:a07644edde9d6150f2022e',
-  measurementId: 'G-56Z07D0XBJ',
+  apiKey: 'AIzaSyBh-m594R5klVcpc6CGc3KuTBpCP52QnZw',
+  authDomain: 'focus-b7c03.firebaseapp.com',
+  databaseURL: 'https://focus-b7c03.firebaseio.com',
+  projectId: 'focus-b7c03',
+  storageBucket: 'focus-b7c03.appspot.com',
+  messagingSenderId: '424633475443',
+  appId: '1:424633475443:web:cc6f71c949d0e3b8ba6506',
+  measurementId: 'G-8K07N0JCCF',
 };
 
 firebase.initializeApp(firebaseConfig);
